@@ -9,13 +9,14 @@ export default function AboutPage() {
         <div className="flex flex-col md:flex-row gap-8 items-start">
           <div className="w-48 h-48 relative rounded-full overflow-hidden flex-shrink-0">
             <Image
-              src="/profile.jpg"
+              src="/avatar.jpg"
               alt="Profile picture"
               fill
-              sizes="(max-width: 768px) 100vw, 192px"
-              quality={95}
+              sizes="192px"
+              quality={90}
               priority
               className="object-cover"
+              loading="eager"
             />
           </div>
 
