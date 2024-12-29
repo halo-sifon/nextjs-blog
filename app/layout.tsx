@@ -18,7 +18,7 @@ const zcoolKuaiLe = ZCOOL_KuaiLe({
 });
 
 export const metadata: Metadata = {
-  title: "我的博客",
+  title: "Sifon的博客",
   description: "个人博客网站",
 };
 

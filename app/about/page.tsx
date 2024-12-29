@@ -12,8 +12,10 @@ export default function AboutPage() {
               src="/profile.jpg"
               alt="Profile picture"
               fill
-              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 192px"
+              quality={95}
               priority
+              className="object-cover"
             />
           </div>
 
