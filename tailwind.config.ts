@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import typography from '@tailwindcss/typography';
 
 export default {
   content: [
@@ -12,7 +13,13 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        'noto-serif': ['var(--font-noto-serif)'],
+        'zcool-kuaile': ['var(--font-zcool-kuaile)'],
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    typography
+  ],
 } satisfies Config;
