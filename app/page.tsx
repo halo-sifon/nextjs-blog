@@ -1,15 +1,16 @@
 import Link from "next/link";
 import { getAllPosts } from "~/libs/posts";
+import PostItem from "~/components/post-item";
 
-export default async function Home() {
-  const posts = (await getAllPosts()).slice(0, 5);
+export default function Home() {
+  const posts = getAllPosts().slice(0, 5);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
       {/* 欢迎区域 */}
       <section className="text-center mb-16">
-        <h1 className="text-4xl font-bold mb-4">欢迎来到我的博客</h1>
-        <p className="text-xl text-gray-600">分享技术、生活和思考</p>
+        <h1 className="text-4xl font-bold mb-4 font-noto-serif">欢迎来到我的博客</h1>
+        <p className="text-xl text-gray-600 font-noto-serif">分享技术、生活和思考</p>
       </section>
 
       {/* 最新文章 */}
@@ -22,19 +23,7 @@ export default async function Home() {
         </div>
         <div className="space-y-6">
           {posts.map(post => (
-            <article key={post.slug} className="border-b pb-6">
-              <Link href={`/posts/${post.slug}`}>
-                <h3 className="text-xl font-bold hover:text-blue-600">
-                  {post.title}
-                </h3>
-              </Link>
-              <div className="text-gray-600 mt-2">
-                <span>{post.date}</span>
-                <span className="mx-2">·</span>
-                <span>{post.category}</span>
-              </div>
-              <p className="mt-2 text-gray-700">{post.excerpt}</p>
-            </article>
+            <PostItem key={post.slug} post={post} />
           ))}
         </div>
       </section>
