@@ -1,7 +1,7 @@
 "use client";
 
 import { Post } from "~/libs/posts";
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import PostItem from "~/components/post-item";
 
 interface PostsClientProps {
@@ -17,14 +17,16 @@ export default function PostsClient({
 }: PostsClientProps) {
   const [posts, setPosts] = useState<Post[]>(initialPosts);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchValue, setSearchValue] = useState("");
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [total, setTotal] = useState(initialTotal);
+  const [hasSearched, setHasSearched] = useState(false);
 
   // 搜索或加载更多时获取文章
-  const fetchPosts = async (searchQuery: string, pageNum: number) => {
+  const fetchPosts = useCallback(async (searchQuery: string, pageNum: number) => {
     setIsLoading(true);
     if (pageNum === 1) {
       setIsSearching(true);
@@ -52,18 +54,17 @@ export default function PostsClient({
     } finally {
       setIsLoading(false);
       setIsSearching(false);
+      setHasSearched(true);
     }
-  };
+  }, []);
 
   // 处理搜索
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setPage(1);
-      fetchPosts(searchTerm, 1);
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSearchTerm(searchValue);
+    setPage(1);
+    fetchPosts(searchValue, 1);
+  };
 
   // 加载更多
   const loadMore = () => {
@@ -77,12 +78,12 @@ export default function PostsClient({
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="mb-8">
-        <div className="relative">
+        <form onSubmit={handleSearch} className="relative">
           <input
             type="text"
-            placeholder="搜索文章..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="搜索文章，按回车确认..."
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
             className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           {isSearching && (
@@ -90,8 +91,16 @@ export default function PostsClient({
               <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
             </div>
           )}
-        </div>
+        </form>
       </div>
+
+      {posts.length === 0 && !isLoading && hasSearched && (
+        <div className="text-center py-8">
+          <div className="text-gray-500">
+            {searchTerm ? `没有找到与 "${searchTerm}" 相关的文章` : "暂无文章"}
+          </div>
+        </div>
+      )}
 
       <div className="space-y-6">
         {posts.map((post) => (
