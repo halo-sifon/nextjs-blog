@@ -18,7 +18,7 @@ export default async function PostPage(props: {
 }) {
   const params = await props.params;
   const slug = params.slug.join("/");
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     return notFound();
