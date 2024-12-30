@@ -15,7 +15,7 @@ export default {
       },
       fontFamily: {
         'noto-serif': ['var(--font-noto-serif)'],
-        'zcool-kuaile': ['var(--font-zcool-kuaile)'],
+        'noto-sans': ['var(--font-noto-sans)'],
       },
     },
   },

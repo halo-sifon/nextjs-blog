@@ -19,12 +19,16 @@ export default function PostsClient({
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [total, setTotal] = useState(initialTotal);
 
   // 搜索或加载更多时获取文章
   const fetchPosts = async (searchQuery: string, pageNum: number) => {
     setIsLoading(true);
+    if (pageNum === 1) {
+      setIsSearching(true);
+    }
     try {
       const params = new URLSearchParams({
         page: pageNum.toString(),
@@ -47,6 +51,7 @@ export default function PostsClient({
       console.error('Failed to fetch posts:', error);
     } finally {
       setIsLoading(false);
+      setIsSearching(false);
     }
   };
 
@@ -72,13 +77,20 @@ export default function PostsClient({
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="mb-8">
-        <input
-          type="text"
-          placeholder="搜索文章..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="搜索文章..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          {isSearching && (
+            <div className="absolute right-3 top-1/2 -translate-y-1/2">
+              <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="space-y-6">
@@ -92,9 +104,16 @@ export default function PostsClient({
           <button
             onClick={loadMore}
             disabled={isLoading}
-            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50"
+            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 flex items-center justify-center mx-auto space-x-2"
           >
-            {isLoading ? "加载中..." : "加载更多"}
+            {isLoading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span>加载中...</span>
+              </>
+            ) : (
+              <span>加载更多</span>
+            )}
           </button>
         </div>
       )}

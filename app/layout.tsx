@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Noto_Serif_SC, ZCOOL_KuaiLe } from "next/font/google";
+import { Noto_Serif_SC, Noto_Sans_SC } from "next/font/google";
 import "./globals.css";
 import Header from "~/components/header";
 import Footer from "~/components/footer";
+import ProgressBar from "~/components/progress-bar";
 import AnimatedLayout from "~/components/animated-layout";
 
 const notoSerifSC = Noto_Serif_SC({
@@ -11,10 +12,10 @@ const notoSerifSC = Noto_Serif_SC({
   variable: "--font-noto-serif",
 });
 
-const zcoolKuaiLe = ZCOOL_KuaiLe({
-  weight: "400",
+const notoSansSC = Noto_Sans_SC({
+  weight: ["100", "300", "400", "500", "700", "900"],
   subsets: ["latin"],
-  variable: "--font-zcool-kuaile",
+  variable: "--font-noto-sans",
 });
 
 export const metadata: Metadata = {
@@ -29,7 +30,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN">
-      <body className={`${notoSerifSC.variable} ${zcoolKuaiLe.variable} flex flex-col min-h-screen`}>
+      <body
+        className={`${notoSerifSC.variable} ${notoSansSC.variable} flex flex-col min-h-screen`}
+      >
+        <ProgressBar />
         <Header />
         <main className="flex-grow">
           <AnimatedLayout>{children}</AnimatedLayout>

@@ -9,14 +9,18 @@ export default async function Home() {
     <div className="max-w-4xl mx-auto px-4 py-12">
       {/* 欢迎区域 */}
       <section className="text-center mb-16">
-        <h1 className="text-4xl font-bold mb-4 font-noto-serif">欢迎来到我的博客</h1>
-        <p className="text-xl text-gray-600 font-noto-serif">分享技术、生活和思考</p>
+        <h1 className="text-4xl font-bold mb-4 font-noto-serif">
+          欢迎来到我的博客
+        </h1>
+        <p className="text-xl text-gray-600 font-noto-serif">
+          分享技术、生活和思考
+        </p>
       </section>
 
       {/* 最新文章 */}
       <section className="mb-12">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">最新文章</h2>
+          <h2 className="text-2xl font-bold font-noto-serif">最新文章</h2>
           <Link href="/posts" className="text-blue-600 hover:text-blue-800">
             查看全部
           </Link>
