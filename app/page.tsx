@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { getAllPosts } from "~/libs/posts";
+import { getPaginatedPosts } from "~/libs/posts";
 import PostItem from "~/components/post-item";
 
-export default function Home() {
-  const posts = getAllPosts().slice(0, 5);
+export default async function Home() {
+  const { posts } = await getPaginatedPosts(1, 5);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">

@@ -1,7 +1,13 @@
-import { getAllPosts } from "~/libs/posts";
+import { getPaginatedPosts } from "~/libs/posts";
 import PostsClient from "./posts-client";
 
-export default function PostsList() {
-  const posts = getAllPosts();
-  return <PostsClient initialPosts={posts} />;
+export default async function PostsList() {
+  const { posts, total, hasMore } = await getPaginatedPosts(1, 10);
+  return (
+    <PostsClient 
+      initialPosts={posts} 
+      initialTotal={total} 
+      initialHasMore={hasMore} 
+    />
+  );
 }
