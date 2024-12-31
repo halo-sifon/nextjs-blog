@@ -173,19 +173,19 @@ export default function ImageCompressPage() {
 
     // 回退到创建 a 标签的方式
     const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.style.display = 'none';
+    const a = document.createElement("a");
+    a.style.display = "none";
     a.href = url;
     a.download = filename;
-    
+
     // 使用 click() 事件
-    const event = new MouseEvent('click', {
+    const event = new MouseEvent("click", {
       view: window,
       bubbles: true,
       cancelable: true,
     });
     a.dispatchEvent(event);
-    
+
     window.URL.revokeObjectURL(url);
   };
 
@@ -203,7 +203,7 @@ export default function ImageCompressPage() {
         }
         const byteArray = new Uint8Array(byteNumbers);
         const blob = new Blob([byteArray], { type: "image/jpeg" });
-        
+
         downloadFile(blob, `compressed_${compressedImages[0].name}`);
       } else {
         const zip = new JSZip();
@@ -230,7 +230,7 @@ export default function ImageCompressPage() {
   const handleDelete = (index: number) => {
     setOriginalImages(prev => prev.filter((_, i) => i !== index));
     setCompressedImages(prev => prev.filter((_, i) => i !== index));
-    showToast.success('删除成功');
+    showToast.success("删除成功");
   };
 
   return (
@@ -271,11 +271,11 @@ export default function ImageCompressPage() {
         )}
 
         {originalImages.length > 0 && (
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
             <h2 className="text-lg font-bold mb-4 font-noto-serif">压缩选项</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
                   质量 ({quality}%) - 最小值: 10%
                 </label>
                 <input
@@ -288,15 +288,17 @@ export default function ImageCompressPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
                   最大宽度 (100-4096)
                 </label>
                 <input
                   type="number"
+                  min="100"
+                  max="4096"
                   value={maxWidth}
                   onChange={e => handleMaxWidthChange(Number(e.target.value))}
                   onBlur={handleMaxWidthBlur}
-                  className="w-32 px-3 py-1 border rounded-lg"
+                  className="w-32 px-3 py-1 border rounded-lg text-gray-900 dark:text-gray-800"
                 />
               </div>
               <div className="text-center">
@@ -315,7 +317,10 @@ export default function ImageCompressPage() {
         {(originalImages.length > 0 || compressedImages.length > 0) && (
           <div className="space-y-6">
             {originalImages.map((img, index) => (
-              <div key={index} className="relative bg-white rounded-lg p-4 shadow-sm">
+              <div
+                key={index}
+                className="relative bg-white dark:bg-gray-900 rounded-lg p-4 shadow-sm"
+              >
                 <button
                   onClick={() => handleDelete(index)}
                   className="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors z-10 text-sm shadow-md"
@@ -362,11 +367,14 @@ export default function ImageCompressPage() {
                       <div className="flex justify-between items-center text-xs text-gray-500">
                         <span>大小: {compressedImages[index].size}</span>
                         <span className="text-green-600">
-                          压缩率: {Math.round(
+                          压缩率:{" "}
+                          {Math.round(
                             (1 -
-                              compressedImages[index].file.size / img.file.size) *
+                              compressedImages[index].file.size /
+                                img.file.size) *
                               100
-                          )}%
+                          )}
+                          %
                         </span>
                       </div>
                     </div>

@@ -6,18 +6,18 @@ interface PostItemProps {
 }
 
 export default function PostItem({ post }: PostItemProps) {
-  const normalizedSlug = post.slug.split('\\').join('/');
-  
+  const normalizedSlug = post.slug.split("\\").join("/");
+
   return (
-    <article className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
-      <Link 
-        href={`/posts/${encodeURIComponent(normalizedSlug)}`} 
+    <article className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+      <Link
+        href={`/posts/${encodeURIComponent(normalizedSlug)}`}
         className="block p-6"
       >
-        <h2 className="text-xl font-noto-serif font-bold text-gray-900 mb-2">
+        <h2 className="text-xl font-noto-serif font-bold text-gray-900 dark:text-gray-200 mb-2">
           {post.title}
         </h2>
-        <div className="flex items-center text-sm text-gray-500">
+        <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
           <span className="flex items-center">
             <svg
               className="w-4 h-4 mr-2"
@@ -55,4 +55,4 @@ export default function PostItem({ post }: PostItemProps) {
       </Link>
     </article>
   );
-} 
+}

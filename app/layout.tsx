@@ -5,6 +5,7 @@ import Header from "~/components/header";
 import Footer from "~/components/footer";
 import ProgressBar from "~/components/progress-bar";
 import AnimatedLayout from "~/components/animated-layout";
+import { ThemeProvider } from "~/providers/theme-provider";
 
 const notoSerifSC = Noto_Serif_SC({
   weight: ["400", "700"],
@@ -33,12 +34,14 @@ export default function RootLayout({
       <body
         className={`${notoSerifSC.variable} ${notoSansSC.variable} flex flex-col min-h-screen`}
       >
-        <ProgressBar />
-        <Header />
-        <main className="flex-grow">
-          <AnimatedLayout>{children}</AnimatedLayout>
-        </main>
-        <Footer />
+        <ThemeProvider>
+          <ProgressBar />
+          <Header />
+          <main className="flex-grow">
+            <AnimatedLayout>{children}</AnimatedLayout>
+          </main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

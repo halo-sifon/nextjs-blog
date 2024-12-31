@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-import typography from '@tailwindcss/typography';
+import typography from "@tailwindcss/typography";
 
 export default {
   content: [
@@ -14,12 +14,11 @@ export default {
         foreground: "var(--foreground)",
       },
       fontFamily: {
-        'noto-serif': ['var(--font-noto-serif)'],
-        'noto-sans': ['var(--font-noto-sans)'],
+        "noto-serif": ["var(--font-noto-serif)"],
+        "noto-sans": ["var(--font-noto-sans)"],
       },
     },
   },
-  plugins: [
-    typography
-  ],
+  plugins: [typography],
+  darkMode: "selector",
 } satisfies Config;

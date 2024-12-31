@@ -51,12 +51,14 @@ export default async function PostPage(props: {
           </Link>
         </div>
 
-        <article className="bg-white rounded-xl shadow-sm overflow-hidden">
+        <article className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
           <div className="px-8 py-6">
             <header className="text-center mb-8">
-              <h1 className="text-3xl font-noto-serif font-bold text-gray-900 mb-4">{post.title}</h1>
-              
-              <div className="flex items-center justify-center text-sm text-gray-500">
+              <h1 className="text-3xl font-noto-serif font-bold text-gray-900 dark:text-gray-200 mb-4">
+                {post.title}
+              </h1>
+
+              <div className="flex items-center justify-center text-sm text-gray-500 dark:text-gray-400">
                 <span className="flex items-center">
                   <svg
                     className="w-4 h-4 mr-2"
