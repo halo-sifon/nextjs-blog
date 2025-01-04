@@ -6,6 +6,7 @@ import Footer from "~/components/footer";
 import ProgressBar from "~/components/progress-bar";
 import AnimatedLayout from "~/components/animated-layout";
 import { ThemeProvider } from "~/providers/theme-provider";
+import { Toaster } from 'sonner'
 
 const notoSerifSC = Noto_Serif_SC({
   weight: ["400", "700"],
@@ -41,6 +42,7 @@ export default function RootLayout({
             <AnimatedLayout>{children}</AnimatedLayout>
           </main>
           <Footer />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
