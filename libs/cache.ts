@@ -16,11 +16,30 @@ const CACHE_TTL = 60 * 60 * 24;
 // 缓存键前缀
 const CACHE_PREFIX = "blog:";
 
-export async function getCache<T>(key: string): Promise<T | null> {
+export interface CacheOptions {
+  revalidate?: number | false;
+}
+
+export async function getCache<T>(key: string, options: CacheOptions = {}): Promise<T | null> {
   if (CACHE_ENABLED && redis) {
     try {
-      const data = await redis.get(CACHE_PREFIX + key);
-      return data as T;
+      // 使用 fetch 包装器来支持 revalidate 选项
+      const fetchData = async () => {
+        const data = await redis.get(CACHE_PREFIX + key);
+        return data as T;
+      };
+
+      if (typeof options.revalidate === 'number') {
+        const response = await fetch(`${process.env.KV_REST_API_URL}/get/${CACHE_PREFIX}${key}`, {
+          headers: {
+            Authorization: `Bearer ${process.env.KV_REST_API_TOKEN}`,
+          },
+          next: { revalidate: options.revalidate }
+        });
+        return response.json();
+      }
+
+      return await fetchData();
     } catch (error) {
       console.error("Cache get error:", error);
       return null;

@@ -2,6 +2,8 @@ import Link from "next/link";
 import { getPaginatedPosts } from "~/libs/posts";
 import PostItem from "~/components/post-item";
 
+export const revalidate = 3600; // 1小时重新验证一次
+
 export default async function Home() {
   const { posts } = await getPaginatedPosts(1, 5);
 

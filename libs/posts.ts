@@ -71,7 +71,9 @@ async function getAllPostsWithoutContent() {
 
 export async function getPaginatedPosts(page: number = 1, limit: number = 10, search?: string): Promise<PaginatedPosts> {
   const cacheKey = `posts:paginated:${page}:${limit}:${search || 'all'}`;
-  const cachedResult = await getCache<PaginatedPosts>(cacheKey);
+  const cachedResult = await getCache<PaginatedPosts>(cacheKey, {
+    revalidate: 3600 // 1小时重新验证一次
+  });
 
   if (cachedResult) {
     return cachedResult;
