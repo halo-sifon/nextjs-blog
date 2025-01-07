@@ -5,7 +5,7 @@ import PostItem from "~/components/post-item";
 export const revalidate = 3600; // 1小时重新验证一次
 
 export default async function Home() {
-  const { posts } = await getPaginatedPosts(1, 5);
+  const { posts = [] } = await getPaginatedPosts(1, 5).catch(() => ({ posts: [] }));
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
@@ -27,11 +27,17 @@ export default async function Home() {
             查看全部
           </Link>
         </div>
-        <div className="space-y-6">
-          {posts.map(post => (
-            <PostItem key={post.slug} post={post} />
-          ))}
-        </div>
+        {posts.length > 0 ? (
+          <div className="space-y-6">
+            {posts.map(post => (
+              <PostItem key={post.slug} post={post} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8 text-gray-500">
+            暂无文章
+          </div>
+        )}
       </section>
     </div>
   );

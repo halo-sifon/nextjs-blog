@@ -30,13 +30,25 @@ export async function getCache<T>(key: string, options: CacheOptions = {}): Prom
       };
 
       if (typeof options.revalidate === 'number') {
-        const response = await fetch(`${process.env.KV_REST_API_URL}/get/${CACHE_PREFIX}${key}`, {
-          headers: {
-            Authorization: `Bearer ${process.env.KV_REST_API_TOKEN}`,
-          },
-          next: { revalidate: options.revalidate }
-        });
-        return response.json();
+        try {
+          const response = await fetch(`${process.env.KV_REST_API_URL}/get/${CACHE_PREFIX}${key}`, {
+            headers: {
+              Authorization: `Bearer ${process.env.KV_REST_API_TOKEN}`,
+            },
+            next: { revalidate: options.revalidate }
+          });
+          
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
+          const data = await response.json();
+          return data.result as T; // Upstash REST API 返回的数据在 result 字段中
+        } catch (error) {
+          console.error("Revalidation fetch error:", error);
+          // 如果重验证失败，回退到直接从 Redis 获取
+          return fetchData();
+        }
       }
 
       return await fetchData();
