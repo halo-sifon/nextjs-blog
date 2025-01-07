@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "NODE_OPTIONS='--no-warnings' next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -12,6 +12,7 @@
     "@radix-ui/react-progress": "^1.1.1",
     "@radix-ui/react-slot": "^1.1.1",
     "@tailwindcss/typography": "^0.5.10",
+    "@types/dompurify": "^3.2.0",
     "axios": "^1.7.9",
     "browser-image-compression": "^2.0.2",
     "class-variance-authority": "^0.7.1",
@@ -22,6 +23,7 @@
     "gray-matter": "^4.0.3",
     "highlight.js": "^11.11.1",
     "ioredis": "^5.4.2",
+    "isomorphic-dompurify": "^2.19.0",
     "jszip": "^3.10.1",
     "lucide-react": "^0.469.0",
     "markdown-it": "^14.0.0",

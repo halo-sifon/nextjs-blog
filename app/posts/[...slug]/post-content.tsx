@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import DOMPurify from 'isomorphic-dompurify';
 
 interface PostContentProps {
   content: string;
@@ -66,7 +67,7 @@ export default function PostContent({ content }: PostContentProps) {
         dark:prose-blockquote:border-gray-700
         prose-ul:list-disc prose-ol:list-decimal
         dark:prose-invert"
-      dangerouslySetInnerHTML={{ __html: content }}
+      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
     />
   );
 }
