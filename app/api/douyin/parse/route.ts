@@ -21,28 +21,34 @@ export async function POST(request: NextRequest) {
       { status: axios.HttpStatusCode.BadRequest }
     );
   }
-  // 获取视频信息
-  await page.goto(realUrl, { waitUntil: "load" });
-  await page.waitForSelector("video source");
-  const pageTitle = await page.title();
+  console.log("realUrl", realUrl);
 
-  const src = await page.evaluate(() => {
-    const sources: HTMLSourceElement[] = Array.from(
-      document.querySelectorAll("video source")
-    );
+  try {
+    // 获取视频信息
+    await page.goto(realUrl, { waitUntil: "domcontentloaded" });
+    await page.waitForSelector("video source");
+    const pageTitle = await page.title();
 
-    if (sources.length === 0) {
-      return null;
+    const src = await page.evaluate(() => {
+      const sources = Array.from(document.querySelectorAll("video source"));
+      if (sources.length === 0) return null;
+
+      // 获取所有视频源
+      const videoUrls = sources.map(source => (source as HTMLSourceElement).src).filter(Boolean);
+      return videoUrls;
+    });
+
+    if (!src || src.length === 0) {
+      return NextResponse.json(
+        { error: "未找到视频源" },
+        { status: axios.HttpStatusCode.NotFound }
+      );
     }
 
-    for (const source of sources) {
-      if (source.src.includes("www.douyin.com")) {
-        return source.src;
-      }
-    }
-  });
-
-  return NextResponse.json({ src, pageTitle });
+    return NextResponse.json({ src, pageTitle });
+  } finally {
+    await browser.close();
+  }
 }
 
 async function getRealUrl(url: string) {

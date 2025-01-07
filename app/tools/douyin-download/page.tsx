@@ -8,11 +8,13 @@ import { toast } from "sonner";
 
 interface VideoInfo {
   pageTitle: string;
-  src: string;
+  src: string[];
 }
 
 export default function DouyinDownload() {
-  const [shareUrl, setShareUrl] = useState("");
+  const [shareUrl, setShareUrl] = useState(
+    "0.05 11/11 E@U.LJ lcN:/ 蔡康永说，当你看到两个人在路边和颜悦色、谈笑风生的聊天，你不会去关注他们，当他们吵架、打架大家就会蜂拥而来看热闹，这是人性可“斗嘴生事”得来的流量关注，负面影响更大 # 提升自己 # 郑州 # 亮亮丽君  https://v.douyin.com/iyu2SjEj/ 复制此链接，打开Dou音搜索，直接观看视频！"
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [videoInfo, setVideoInfo] = useState<VideoInfo | null>(null);
 
@@ -47,40 +49,6 @@ export default function DouyinDownload() {
     }
   };
 
-  // 下载视频
-  const handleDownload = async () => {
-    if (!videoInfo) return;
-
-    try {
-      const response = await fetch("/api/douyin/download", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ url: videoInfo.src }),
-      });
-
-      if (!response.ok) {
-        throw new Error("下载失败");
-      }
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${videoInfo.pageTitle || "抖音视频"}.mp4`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-
-      // 添加到下载历史
-      toast.success("下载成功");
-    } catch {
-      toast.error("下载失败，请重试");
-    }
-  };
-
   return (
     <div className="container mx-auto p-4 space-y-6">
       <div className="space-y-2">
@@ -111,14 +79,24 @@ export default function DouyinDownload() {
           <div className="flex gap-4">
             <div className="flex-1 space-y-2">
               <h2 className="text-xl font-semibold">{videoInfo.pageTitle}</h2>
-              <Button variant={"secondary"} onClick={handleDownload}>
-                下载视频
-              </Button>
-              <video
-                src={videoInfo.src}
-                controls
-                className="w-full h-auto"
-              ></video>
+              {videoInfo.src.map((src, index) => (
+                <div key={src} className="mt-4">
+                  <p className="text-sm text-muted-foreground mb-2">
+                    视频源 {index + 1}
+                  </p>
+                  <video
+                    controls
+                    className="w-full h-auto"
+                    crossOrigin="anonymous"
+                  >
+                    <source
+                      src={`/api/douyin/play?url=${encodeURIComponent(src)}`}
+                      type="video/mp4"
+                    />
+                    您的浏览器不支持视频播放
+                  </video>
+                </div>
+              ))}
             </div>
           </div>
         </Card>
