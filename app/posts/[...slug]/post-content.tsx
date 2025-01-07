@@ -52,17 +52,17 @@ export default function PostContent({ content }: PostContentProps) {
       className="prose prose-lg mx-auto font-noto-serif
         prose-headings:font-noto-serif prose-headings:font-bold prose-headings:text-gray-900 
         dark:prose-headings:text-gray-200
-        prose-p:text-gray-600
+        prose-p:text-gray-800
         dark:prose-p:text-gray-400
-        prose-a:text-blue-600 hover:prose-a:text-blue-700
+        prose-a:text-blue-700 hover:prose-a:text-blue-800
         dark:prose-a:text-blue-400 dark:hover:prose-a:text-blue-500
         prose-strong:text-gray-900 
         dark:prose-strong:text-gray-200
-        prose-code:text-gray-800 prose-code:bg-gray-50 prose-code:px-1 prose-code:rounded
+        prose-code:text-gray-900 prose-code:bg-gray-100 prose-code:px-1 prose-code:rounded
         dark:prose-code:text-gray-200 dark:prose-code:bg-gray-800/50
-        prose-pre:bg-gray-50 prose-pre:border prose-pre:border-gray-200
+        prose-pre:bg-gray-100 prose-pre:border prose-pre:border-gray-300
         dark:prose-pre:bg-gray-800/50 dark:prose-pre:border-gray-700
-        prose-blockquote:border-l-4 prose-blockquote:border-gray-200 prose-blockquote:pl-4 prose-blockquote:italic
+        prose-blockquote:border-l-4 prose-blockquote:border-gray-300 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-800
         dark:prose-blockquote:border-gray-700
         prose-ul:list-disc prose-ol:list-decimal
         dark:prose-invert"
