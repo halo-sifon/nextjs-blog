@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import Toast, { showToast } from "~/components/toast";
+import { showToast } from "@/libs/utils";
 
 export default function Base64Page() {
   const [textInput, setTextInput] = useState("");
@@ -115,7 +115,6 @@ export default function Base64Page() {
 
   return (
     <div className="max-w-4xl mx-auto p-4">
-      <Toast />
       <h1 className="text-2xl font-bold mb-6 font-noto-serif">Base64 转换</h1>
       
       <div className="space-y-6">
