@@ -77,61 +77,68 @@ export default function PostsClient({
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="mb-8">
-        <form onSubmit={handleSearch} className="relative">
-          <input
-            type="text"
-            placeholder="搜索文章，按回车确认..."
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-          {isSearching && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2">
-              <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      <article className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+        <div className="px-8 py-6">
+          <header className="text-center mb-8">
+            <h1 className="text-3xl font-noto-serif font-bold text-gray-900 dark:text-gray-200 mb-4">
+              博客文章
+            </h1>
+            <form onSubmit={handleSearch} className="relative max-w-2xl mx-auto">
+              <input
+                type="text"
+                placeholder="搜索文章，按回车确认..."
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                className="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              {isSearching && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              )}
+            </form>
+          </header>
+
+          {posts.length === 0 && !isLoading && hasSearched && (
+            <div className="text-center py-8">
+              <div className="text-gray-500 dark:text-gray-400">
+                {searchTerm ? `没有找到与 "${searchTerm}" 相关的文章` : "暂无文章"}
+              </div>
             </div>
           )}
-        </form>
-      </div>
 
-      {posts.length === 0 && !isLoading && hasSearched && (
-        <div className="text-center py-8">
-          <div className="text-gray-500">
-            {searchTerm ? `没有找到与 "${searchTerm}" 相关的文章` : "暂无文章"}
+          <div className="space-y-6">
+            {posts.map((post) => (
+              <PostItem key={post.slug} post={post} />
+            ))}
           </div>
-        </div>
-      )}
 
-      <div className="space-y-6">
-        {posts.map((post) => (
-          <PostItem key={post.slug} post={post} />
-        ))}
-      </div>
+          {hasMore && (
+            <div className="mt-8 text-center">
+              <button
+                onClick={loadMore}
+                disabled={isLoading}
+                className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 flex items-center justify-center mx-auto space-x-2"
+              >
+                {isLoading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>加载中...</span>
+                  </>
+                ) : (
+                  <span>加载更多</span>
+                )}
+              </button>
+            </div>
+          )}
 
-      {hasMore && (
-        <div className="mt-8 text-center">
-          <button
-            onClick={loadMore}
-            disabled={isLoading}
-            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 flex items-center justify-center mx-auto space-x-2"
-          >
-            {isLoading ? (
-              <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                <span>加载中...</span>
-              </>
-            ) : (
-              <span>加载更多</span>
-            )}
-          </button>
+          {total > 0 && (
+            <div className="mt-4 text-center text-gray-500 dark:text-gray-400">
+              共 {total} 篇文章
+            </div>
+          )}
         </div>
-      )}
-
-      {total > 0 && (
-        <div className="mt-4 text-center text-gray-500">
-          共 {total} 篇文章
-        </div>
-      )}
+      </article>
     </div>
   );
 }
