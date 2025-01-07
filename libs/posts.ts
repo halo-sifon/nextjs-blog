@@ -1,9 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
-import { getCache, setCache } from './cache';
+import clientPromise, { DB_NAME } from './mongodb';
+import { WithId, Document } from 'mongodb';
 
 const postsDirectory = path.join(process.cwd(), '_posts');
+const COLLECTION_NAME = 'posts';
 
 export interface Post {
   slug: string;
@@ -24,18 +26,43 @@ function normalizeSlug(slug: string) {
   return slug.split(path.sep).join('/');
 }
 
-// 获取所有文章但不包含内容
-async function getAllPostsWithoutContent() {
-  // 尝试从缓存获取
-  const cacheKey = 'posts:list';
-  const cachedPosts = await getCache<Omit<Post, 'content'>[]>(cacheKey);
-  
-  if (cachedPosts) {
-    return cachedPosts;
-  }
+// 转换MongoDB文档为Post对象
+function convertToPost(doc: WithId<Document>): Post {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { _id, ...post } = doc;
+  return post as Post;
+}
 
-  const allPosts: Omit<Post, 'content'>[] = [];
+// 从Markdown文件读取文章
+function readPostFromFile(filePath: string, baseSlug: string = ""): Post {
+  const fileContents = fs.readFileSync(filePath, "utf8");
+  const { data, content } = matter(fileContents);
+  const slug = normalizeSlug(path.join(baseSlug, path.basename(filePath).replace(/\.md$/, "")));
 
+  return {
+    slug,
+    title: data.title,
+    date: data.date,
+    content,
+    category: data.category,
+  };
+}
+
+// 同步单个文章到MongoDB
+async function syncPostToMongoDB(post: Post) {
+  const client = await clientPromise;
+  const db = client.db(DB_NAME);
+  const collection = db.collection(COLLECTION_NAME);
+
+  await collection.updateOne(
+    { slug: post.slug },
+    { $set: post },
+    { upsert: true }
+  );
+}
+
+// 确保文章存在于MongoDB中并同步更新
+async function ensurePostsInMongoDB() {
   function readPostsRecursively(dir: string, baseSlug: string = "") {
     const files = fs.readdirSync(dir);
 
@@ -46,111 +73,83 @@ async function getAllPostsWithoutContent() {
       if (stat.isDirectory()) {
         readPostsRecursively(filePath, path.join(baseSlug, file));
       } else if (file.endsWith(".md")) {
-        const fileContents = fs.readFileSync(filePath, "utf8");
-        const { data } = matter(fileContents);
-        const slug = normalizeSlug(path.join(baseSlug, file.replace(/\.md$/, "")));
-
-        allPosts.push({
-          slug,
-          title: data.title,
-          date: data.date,
-          category: data.category,
-        });
+        const post = readPostFromFile(filePath, baseSlug);
+        syncPostToMongoDB(post).catch(console.error);
       }
     });
   }
 
   readPostsRecursively(postsDirectory);
-  const sortedPosts = allPosts.sort((a, b) => (a.date > b.date ? -1 : 1));
-  
-  // 存入缓存
-  await setCache(cacheKey, sortedPosts);
-  
-  return sortedPosts;
 }
 
 export async function getPaginatedPosts(page: number = 1, limit: number = 10, search?: string): Promise<PaginatedPosts> {
-  const cacheKey = `posts:paginated:${page}:${limit}:${search || 'all'}`;
-  const cachedResult = await getCache<PaginatedPosts>(cacheKey, {
-    revalidate: 3600 // 1小时重新验证一次
-  });
+  await ensurePostsInMongoDB();
+  
+  const client = await clientPromise;
+  const db = client.db(DB_NAME);
+  const collection = db.collection(COLLECTION_NAME);
 
-  if (cachedResult) {
-    return cachedResult;
-  }
+  // 构建查询条件
+  const query = search
+    ? {
+        $or: [
+          { title: { $regex: search, $options: 'i' } },
+          { category: { $regex: search, $options: 'i' } }
+        ]
+      }
+    : {};
 
-  const allPosts = await getAllPostsWithoutContent();
-  let filteredPosts = allPosts;
+  // 获取总数
+  const total = await collection.countDocuments(query);
 
-  if (search) {
-    const searchLower = search.toLowerCase();
-    filteredPosts = allPosts.filter(
-      (post) =>
-        post.title.toLowerCase().includes(searchLower) ||
-        post.category.toLowerCase().includes(searchLower)
-    );
-  }
+  // 获取分页数据
+  const docs = await collection
+    .find(query)
+    .sort({ date: -1 })
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .project<WithId<Document>>({ content: 0 }) // 不返回content字段
+    .toArray();
 
-  const startIndex = (page - 1) * limit;
-  const endIndex = startIndex + limit;
-  const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
+  // 转换文档
+  const posts = docs.map(convertToPost);
 
-  const result = {
-    posts: paginatedPosts.map(post => ({
-      ...post,
-      content: '', // 分页列表不需要返回内容
-    })),
-    total: filteredPosts.length,
-    hasMore: endIndex < filteredPosts.length,
+  return {
+    posts,
+    total,
+    hasMore: (page * limit) < total,
   };
-
-  // 存入缓存
-  await setCache(cacheKey, result);
-
-  return result;
 }
 
 export async function getPostBySlug(slug: string) {
-  const cacheKey = `post:${slug}`;
-  const cachedPost = await getCache<Post>(cacheKey);
-
-  if (cachedPost) {
-    return cachedPost;
-  }
-
   const decodedSlug = decodeURIComponent(slug);
   const normalizedSlug = normalizeSlug(decodedSlug);
-  
-  const possiblePaths = [
-    path.join(postsDirectory, `${normalizedSlug}.md`),
-    path.join(postsDirectory, normalizedSlug, "index.md"),
-  ];
 
-  let filePath = "";
-  for (const p of possiblePaths) {
-    if (fs.existsSync(p)) {
-      filePath = p;
-      break;
+  // 尝试从文件系统读取最新内容
+  const categoryDirs = fs.readdirSync(postsDirectory);
+  let post: Post | null = null;
+
+  for (const dir of categoryDirs) {
+    const categoryPath = path.join(postsDirectory, dir);
+    if (fs.statSync(categoryPath).isDirectory()) {
+      const possiblePath = path.join(categoryPath, `${path.basename(normalizedSlug)}.md`);
+      if (fs.existsSync(possiblePath)) {
+        post = readPostFromFile(possiblePath, dir);
+        await syncPostToMongoDB(post);
+        break;
+      }
     }
   }
 
-  if (!filePath) {
-    return null;
+  if (!post) {
+    // 如果文件不存在，从MongoDB读取
+    const client = await clientPromise;
+    const db = client.db(DB_NAME);
+    const collection = db.collection(COLLECTION_NAME);
+    const doc = await collection.findOne<WithId<Document>>({ slug: normalizedSlug });
+    if (!doc) return null;
+    post = convertToPost(doc);
   }
-
-  const fileContents = fs.readFileSync(filePath, "utf8");
-  const { data, content } = matter(fileContents);
-
-  const post = {
-    slug: normalizedSlug,
-    title: data.title,
-    date: data.date,
-    content,
-    category: data.category,
-  };
-
-  // 存入缓存
-  await setCache(cacheKey, post);
 
   return post;
 } 
