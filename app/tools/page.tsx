@@ -1,10 +1,14 @@
 import Link from "next/link";
 
+// 判断是否在 Vercel 环境
+const isVercel = process.env.VERCEL === "1";
+
 const tools = [
   {
     title: "图片压缩",
     description: "压缩图片文件大小，支持多种格式",
     href: "/tools/image-compress",
+    hiddenInVercel: false, // 在 Vercel 环境下显示
     icon: (
       <svg
         className="w-6 h-6"
@@ -25,6 +29,7 @@ const tools = [
     title: "Base64 转换",
     description: "文本和文件的 Base64 编码转换工具",
     href: "/tools/base64",
+    hiddenInVercel: false, // 在 Vercel 环境下显示
     icon: (
       <svg
         className="w-6 h-6"
@@ -45,6 +50,7 @@ const tools = [
     title: "抖音解析",
     description: "解析抖音视频链接，获取视频地址",
     href: "/tools/douyin-download",
+    hiddenInVercel: true, // 在 Vercel 环境下隐藏
     icon: (
       <svg
         className="w-6 h-6"
@@ -64,13 +70,16 @@ const tools = [
 ];
 
 export default function ToolsPage() {
+  // 根据环境过滤工具列表
+  const filteredTools = isVercel ? tools.filter(tool => !tool.hiddenInVercel) : tools;
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6 font-noto-serif text-gray-900 dark:text-gray-200">
         在线工具
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {tools.map(tool => (
+        {filteredTools.map(tool => (
           <Link
             key={tool.href}
             href={tool.href}
