@@ -19,8 +19,8 @@ export default function DouyinDownload() {
   // 处理视频播放，确保只有一个视频在播放
   const handleVideoPlay = (event: React.SyntheticEvent<HTMLVideoElement>) => {
     const currentVideo = event.currentTarget;
-    const videos = document.querySelectorAll('video');
-    
+    const videos = document.querySelectorAll("video");
+
     videos.forEach(video => {
       if (video !== currentVideo && !video.paused) {
         video.pause();
@@ -44,14 +44,16 @@ export default function DouyinDownload() {
         body: JSON.stringify({ url: shareUrl }),
       });
 
+      const data = await response.json();
       if (!response.ok) {
-        throw new Error("解析失败");
+        throw new Error(data.msg || "解析失败");
       }
 
-      const data = await response.json();
       setVideoInfo(data);
-    } catch {
-      showToast.error("视频解析失败，请检查链接是否正确");
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : "视频解析失败，请检查链接是否正确";
+      showToast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -75,8 +77,8 @@ export default function DouyinDownload() {
             onChange={e => setShareUrl(e.target.value)}
             className="flex-1"
           />
-          <Button 
-            onClick={handleParse} 
+          <Button
+            onClick={handleParse}
             disabled={isLoading}
             className="w-full sm:w-auto"
           >
