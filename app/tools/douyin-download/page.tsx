@@ -16,6 +16,18 @@ export default function DouyinDownload() {
   const [isLoading, setIsLoading] = useState(false);
   const [videoInfo, setVideoInfo] = useState<VideoInfo | null>(null);
 
+  // 处理视频播放，确保只有一个视频在播放
+  const handleVideoPlay = (event: React.SyntheticEvent<HTMLVideoElement>) => {
+    const currentVideo = event.currentTarget;
+    const videos = document.querySelectorAll('video');
+    
+    videos.forEach(video => {
+      if (video !== currentVideo && !video.paused) {
+        video.pause();
+      }
+    });
+  };
+
   // 解析视频链接
   const handleParse = async () => {
     if (!shareUrl.trim()) {
@@ -46,24 +58,28 @@ export default function DouyinDownload() {
   };
 
   return (
-    <div className="container mx-auto p-4 space-y-6">
+    <div className="container mx-auto p-4 md:p-6 space-y-4 md:space-y-6">
       <div className="space-y-2">
         <h1 className="text-2xl font-bold">抖音视频下载工具</h1>
-        <p className="text-muted-foreground">
+        <p className="text-sm md:text-base text-muted-foreground">
           支持无水印下载抖音视频，粘贴分享链接即可使用
         </p>
       </div>
 
       {/* 输入区域 */}
-      <Card className="p-4 space-y-4">
-        <div className="flex gap-2">
+      <Card className="p-3 md:p-4 space-y-4">
+        <div className="flex flex-col sm:flex-row gap-2">
           <Input
             placeholder="请粘贴抖音分享链接"
             value={shareUrl}
             onChange={e => setShareUrl(e.target.value)}
             className="flex-1"
           />
-          <Button onClick={handleParse} disabled={isLoading}>
+          <Button 
+            onClick={handleParse} 
+            disabled={isLoading}
+            className="w-full sm:w-auto"
+          >
             {isLoading ? "解析中..." : "解析视频"}
           </Button>
         </div>
@@ -71,25 +87,31 @@ export default function DouyinDownload() {
 
       {/* 视频信息展示 */}
       {videoInfo && (
-        <Card className="p-4 space-y-4">
-          <div className="flex gap-4">
-            <div className="flex-1 space-y-2">
-              <h2 className="text-xl font-semibold">{videoInfo.pageTitle}</h2>
+        <Card className="p-3 md:p-4 space-y-3 md:space-y-4">
+          <div className="space-y-3 md:space-y-4">
+            <div className="space-y-2">
+              <h2 className="text-lg md:text-xl font-semibold break-all">
+                {videoInfo.pageTitle}
+              </h2>
               {videoInfo.src.map((src, index) => (
-                <div key={src} className="mt-4">
-                  <p className="text-sm text-muted-foreground mb-2">
+                <div key={src} className="mt-3 md:mt-4">
+                  <p className="text-xs md:text-sm text-muted-foreground mb-2">
                     视频源 {index + 1}
                   </p>
-                  <video
-                    controls
-                    className="w-full h-auto"
-                  >
-                    <source
-                      src={`/api/douyin/play?url=${encodeURIComponent(src)}`}
-                      type="video/mp4"
-                    />
-                    您的浏览器不支持视频播放
-                  </video>
+                  <div className="aspect-[9/16] max-w-md mx-auto">
+                    <video
+                      controls
+                      className="w-full h-full object-contain bg-black/5 rounded-lg"
+                      playsInline
+                      onPlay={handleVideoPlay}
+                    >
+                      <source
+                        src={`/api/douyin/play?url=${encodeURIComponent(src)}`}
+                        type="video/mp4"
+                      />
+                      您的浏览器不支持视频播放
+                    </video>
+                  </div>
                 </div>
               ))}
             </div>
