@@ -42,7 +42,7 @@ export default function RootLayout({
             <AnimatedLayout>{children}</AnimatedLayout>
           </main>
           <Footer />
-          <Toaster />
+          <Toaster richColors position="top-right" />
         </ThemeProvider>
       </body>
     </html>

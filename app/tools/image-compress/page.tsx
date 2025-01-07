@@ -5,7 +5,7 @@ import imageCompression from "browser-image-compression";
 import Image from "next/image";
 import JSZip from "jszip";
 import ImagePreview from "~/components/image-preview";
-import Toast, { showToast } from "~/components/toast";
+import { showToast } from "@/libs/utils";
 
 interface CompressedImage {
   file: File;
@@ -235,7 +235,6 @@ export default function ImageCompressPage() {
 
   return (
     <div>
-      <Toast />
       <h1 className="text-2xl font-bold mb-6 font-noto-serif">图片压缩</h1>
       <div className="space-y-6">
         <div

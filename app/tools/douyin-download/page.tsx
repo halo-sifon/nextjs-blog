@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { toast } from "sonner";
+import { showToast } from "@/libs/utils";
 
 interface VideoInfo {
   pageTitle: string;
@@ -12,16 +12,14 @@ interface VideoInfo {
 }
 
 export default function DouyinDownload() {
-  const [shareUrl, setShareUrl] = useState(
-    "0.05 11/11 E@U.LJ lcN:/ 蔡康永说，当你看到两个人在路边和颜悦色、谈笑风生的聊天，你不会去关注他们，当他们吵架、打架大家就会蜂拥而来看热闹，这是人性可“斗嘴生事”得来的流量关注，负面影响更大 # 提升自己 # 郑州 # 亮亮丽君  https://v.douyin.com/iyu2SjEj/ 复制此链接，打开Dou音搜索，直接观看视频！"
-  );
+  const [shareUrl, setShareUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [videoInfo, setVideoInfo] = useState<VideoInfo | null>(null);
 
   // 解析视频链接
   const handleParse = async () => {
     if (!shareUrl.trim()) {
-      toast.error("请输入分享链接");
+      showToast.error("请输入分享链接");
       return;
     }
     setIsLoading(true);
@@ -39,11 +37,9 @@ export default function DouyinDownload() {
       }
 
       const data = await response.json();
-      console.log(data);
-
       setVideoInfo(data);
     } catch {
-      toast.error("视频解析失败，请检查链接是否正确");
+      showToast.error("视频解析失败，请检查链接是否正确");
     } finally {
       setIsLoading(false);
     }
@@ -87,7 +83,6 @@ export default function DouyinDownload() {
                   <video
                     controls
                     className="w-full h-auto"
-                    crossOrigin="anonymous"
                   >
                     <source
                       src={`/api/douyin/play?url=${encodeURIComponent(src)}`}
