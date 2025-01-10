@@ -50,7 +50,7 @@ const tools = [
     title: "抖音解析",
     description: "解析抖音视频链接，获取视频地址",
     href: "/tools/douyin-download",
-    hiddenInVercel: true, // 在 Vercel 环境下隐藏
+    hiddenInVercel: false, // 在 Vercel 环境下隐藏
     icon: (
       <svg
         className="w-6 h-6"
