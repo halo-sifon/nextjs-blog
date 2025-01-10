@@ -6,7 +6,7 @@ import Footer from "~/components/footer";
 import ProgressBar from "~/components/progress-bar";
 import AnimatedLayout from "~/components/animated-layout";
 import { ThemeProvider } from "~/providers/theme-provider";
-import { Toaster } from 'sonner'
+import { Toaster } from "sonner";
 
 const notoSerifSC = Noto_Serif_SC({
   weight: ["400", "700"],
@@ -22,7 +22,7 @@ const notoSansSC = Noto_Sans_SC({
 
 export const metadata: Metadata = {
   title: "Sifon的博客",
-  description: "个人博客网站",
+  description: "Sifon的博客",
 };
 
 export default function RootLayout({
@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body
-        className={`${notoSerifSC.variable} ${notoSansSC.variable} flex flex-col min-h-screen`}
+        className={`${notoSerifSC.variable} ${notoSansSC.variable} flex flex-col min-h-screen relative`}
       >
         <ThemeProvider>
           <ProgressBar />
