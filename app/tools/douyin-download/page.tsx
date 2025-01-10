@@ -7,6 +7,7 @@ import { useState } from "react";
 import { showToast } from "@/libs/utils";
 import axios from "axios";
 import Image from "next/image";
+import { saveAs } from "file-saver";
 
 interface VideoInfo {
   awemeId: string;
@@ -22,6 +23,7 @@ export default function DouyinDownload() {
   const [shareUrl, setShareUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [videoInfo, setVideoInfo] = useState<Partial<VideoInfo> | null>(null);
+  const [downloadingIndex, setDownloadingIndex] = useState<number | null>(null);
 
   // 解析视频链接
   const handleParse = async () => {
@@ -46,20 +48,38 @@ export default function DouyinDownload() {
   };
 
   // 下载文件
-  const downloadFile = async (url: string, filename: string) => {
+  const downloadFile = async (
+    url: string,
+    filename: string,
+    index?: number
+  ) => {
+    if (index !== undefined) {
+      setDownloadingIndex(index);
+    }
     try {
-      const response = await fetch(`/api/douyin/play?url=${encodeURIComponent(url)}`);
+      const response = await fetch(
+        `/api/douyin/play?url=${encodeURIComponent(url)}`
+      );
       const blob = await response.blob();
-      const blobUrl = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = blobUrl;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(blobUrl);
+      saveAs(blob, filename);
     } catch {
-      showToast.error('下载失败，请重试');
+      showToast.error("下载失败，请重试");
+    } finally {
+      if (index !== undefined) {
+        setDownloadingIndex(null);
+      }
+    }
+  };
+
+  // 批量下载图片
+  const downloadAllImages = async () => {
+    if (!videoInfo?.images) return;
+
+    for (let i = 0; i < videoInfo.images.length; i++) {
+      const image = videoInfo.images[i];
+      await downloadFile(image, `${videoInfo.name || "图片"}_${i + 1}.jpg`, i);
+      // 添加小延迟避免请求过于频繁
+      await new Promise(resolve => setTimeout(resolve, 300));
     }
   };
 
@@ -108,7 +128,6 @@ export default function DouyinDownload() {
                   src={`/api/douyin/play?url=${encodeURIComponent(
                     videoInfo.video || ""
                   )}`}
-                  poster={videoInfo.cover}
                   controls
                   className="w-full h-full object-contain"
                 />
@@ -122,7 +141,9 @@ export default function DouyinDownload() {
                   >
                     <div className="aspect-[3/4]">
                       <Image
-                        src={`/api/douyin/play?url=${encodeURIComponent(image)}`}
+                        src={`/api/douyin/play?url=${encodeURIComponent(
+                          image
+                        )}`}
                         alt={`图片 ${index + 1}`}
                         fill
                         loading="lazy"
@@ -135,9 +156,16 @@ export default function DouyinDownload() {
                       <Button
                         size="sm"
                         variant="secondary"
-                        onClick={() => downloadFile(image, `${videoInfo.name || '图片'}_${index + 1}.jpg`)}
+                        onClick={() =>
+                          downloadFile(
+                            image,
+                            `${videoInfo.name || "图片"}_${index + 1}.jpg`,
+                            index
+                          )
+                        }
+                        disabled={downloadingIndex === index}
                       >
-                        下载
+                        {downloadingIndex === index ? "下载中..." : "下载"}
                       </Button>
                     </div>
                   </div>
@@ -150,31 +178,26 @@ export default function DouyinDownload() {
               {videoInfo.type === "video" ? (
                 <>
                   <Button
-                    onClick={() => downloadFile(videoInfo.video!, `${videoInfo.name || '抖音视频'}.mp4`)}
+                    onClick={() =>
+                      downloadFile(
+                        videoInfo.video!,
+                        `${videoInfo.name || "抖音视频"}.mp4`
+                      )
+                    }
                     className="flex items-center gap-2"
                   >
                     下载视频
                   </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => downloadFile(videoInfo.cover!, `${videoInfo.name || '视频封面'}.jpg`)}
-                    className="flex items-center gap-2"
-                  >
-                    下载封面
-                  </Button>
                 </>
               ) : (
                 <Button
-                  onClick={() => {
-                    videoInfo.images?.forEach((image, index) => {
-                      setTimeout(() => {
-                        downloadFile(image, `${videoInfo.name || '图片'}_${index + 1}.jpg`);
-                      }, index * 500); // 每隔500ms下载一张图片
-                    });
-                  }}
+                  onClick={downloadAllImages}
+                  disabled={downloadingIndex !== null}
                   className="flex items-center gap-2"
                 >
-                  下载全部图片
+                  {downloadingIndex !== null
+                    ? `正在下载第 ${downloadingIndex + 1} 张`
+                    : "下载全部图片"}
                 </Button>
               )}
             </div>
