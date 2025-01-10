@@ -9,7 +9,7 @@ export default function AboutPage() {
         <div className="flex flex-col md:flex-row gap-8 items-start">
           <div className="w-48 h-48 relative rounded-full overflow-hidden flex-shrink-0">
             <Image
-              src="/avatar.png"
+              src="/avatar.jpg"
               alt="Profile picture"
               fill
               priority
