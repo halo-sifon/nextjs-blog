@@ -23,6 +23,13 @@ const notoSansSC = Noto_Sans_SC({
 export const metadata: Metadata = {
   title: "Sifon的博客",
   description: "Sifon的博客",
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    minimumScale: 1,
+    userScalable: false,
+  },
 };
 
 export default function RootLayout({
