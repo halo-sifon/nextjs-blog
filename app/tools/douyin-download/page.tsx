@@ -25,6 +25,41 @@ export default function DouyinDownload() {
   const [videoInfo, setVideoInfo] = useState<Partial<VideoInfo> | null>(null);
   const [downloadingIndex, setDownloadingIndex] = useState<number | null>(null);
 
+  // 处理输入文本，提取链接
+  const processInputText = (text: string) => {
+    // 移除多余的空格和换行符
+    text = text.trim();
+    
+    // 尝试匹配链接
+    const urlMatch = text.match(/(https?:\/\/[^\s]+)/);
+    if (urlMatch) {
+      return urlMatch[0];
+    }
+
+    // 如果没有找到链接，尝试匹配抖音短链接格式
+    const shortUrlMatch = text.match(/v\.douyin\.com\/[a-zA-Z0-9]+/);
+    if (shortUrlMatch) {
+      return `https://${shortUrlMatch[0]}`;
+    }
+
+    // 返回处理后的文本
+    return text;
+  };
+
+  // 处理粘贴事件
+  const handlePaste = (e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const text = e.clipboardData.getData('text');
+    const processedText = processInputText(text);
+    setShareUrl(processedText);
+  };
+
+  // 处理输入变化
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const processedText = processInputText(e.target.value);
+    setShareUrl(processedText);
+  };
+
   // 解析视频链接
   const handleParse = async () => {
     if (!shareUrl.trim()) {
@@ -98,7 +133,8 @@ export default function DouyinDownload() {
           <Input
             placeholder="请粘贴抖音分享链接"
             value={shareUrl}
-            onChange={e => setShareUrl(e.target.value)}
+            onChange={handleInputChange}
+            onPaste={handlePaste}
             className="flex-1"
           />
           <Button
