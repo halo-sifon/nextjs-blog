@@ -39,11 +39,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN">
+    <html lang="zh-CN" suppressHydrationWarning>
       <body
+        suppressHydrationWarning
         className={`${notoSerifSC.variable} ${notoSansSC.variable} flex flex-col min-h-screen relative`}
       >
-        <ThemeProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+          storageKey="theme"
+        >
           <ProgressBar />
           <Header />
           <main className="flex-grow">

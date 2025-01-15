@@ -6,6 +6,8 @@ import Image from "next/image";
 import JSZip from "jszip";
 import ImagePreview from "~/components/image-preview";
 import { showToast } from "@/libs/utils";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 
 interface CompressedImage {
   file: File;
@@ -254,12 +256,9 @@ export default function ImageCompressPage() {
                 e.target.files && handleImagesSelect(e.target.files)
               }
             />
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-            >
+            <Button onClick={() => fileInputRef.current?.click()}>
               选择图片
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -270,14 +269,14 @@ export default function ImageCompressPage() {
         )}
 
         {originalImages.length > 0 && (
-          <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+          <div className="bg-card rounded-lg p-4">
             <h2 className="text-lg font-bold mb-4 font-noto-serif">压缩选项</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
+                <label className="block text-sm font-medium text-muted-foreground mb-1">
                   质量 ({quality}%) - 最小值: 10%
                 </label>
-                <input
+                <Input
                   type="range"
                   min="10"
                   max="100"
@@ -287,27 +286,22 @@ export default function ImageCompressPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
+                <label className="block text-sm font-medium text-muted-foreground mb-1">
                   最大宽度 (100-4096)
                 </label>
-                <input
+                <Input
                   type="number"
                   min="100"
                   max="4096"
                   value={maxWidth}
                   onChange={e => handleMaxWidthChange(Number(e.target.value))}
                   onBlur={handleMaxWidthBlur}
-                  className="w-32 px-3 py-1 border rounded-lg text-gray-900 dark:text-gray-800"
                 />
               </div>
               <div className="text-center">
-                <button
-                  onClick={handleCompress}
-                  disabled={isCompressing}
-                  className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
+                <Button onClick={handleCompress} disabled={isCompressing}>
                   开始压缩
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -318,7 +312,7 @@ export default function ImageCompressPage() {
             {originalImages.map((img, index) => (
               <div
                 key={index}
-                className="relative bg-white dark:bg-gray-900 rounded-lg p-4 shadow-sm"
+                className="relative bg-card rounded-lg p-4 shadow-sm"
               >
                 <button
                   onClick={() => handleDelete(index)}
@@ -331,7 +325,7 @@ export default function ImageCompressPage() {
                   <div className="space-y-2">
                     <h3 className="font-bold text-sm">原始图片 - {img.name}</h3>
                     <div
-                      className="h-40 bg-gray-100 rounded-lg overflow-hidden relative cursor-pointer hover:opacity-90 transition-opacity"
+                      className="h-40 bg-muted rounded-lg overflow-hidden relative cursor-pointer hover:opacity-90 transition-opacity"
                       onClick={() => handlePreview(img.preview)}
                     >
                       <Image
@@ -350,7 +344,7 @@ export default function ImageCompressPage() {
                         压缩后 - {compressedImages[index].name}
                       </h3>
                       <div
-                        className="h-40 bg-gray-100 rounded-lg overflow-hidden relative cursor-pointer hover:opacity-90 transition-opacity"
+                        className="h-40 bg-muted rounded-lg overflow-hidden relative cursor-pointer hover:opacity-90 transition-opacity"
                         onClick={() =>
                           handlePreview(compressedImages[index].preview)
                         }
@@ -386,12 +380,9 @@ export default function ImageCompressPage() {
 
         {compressedImages.length > 0 && !isCompressing && (
           <div className="text-center">
-            <button
-              onClick={downloadCompressedImages}
-              className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-            >
+            <Button onClick={downloadCompressedImages}>
               {compressedImages.length > 1 ? "下载压缩包" : "下载压缩图片"}
-            </button>
+            </Button>
           </div>
         )}
 

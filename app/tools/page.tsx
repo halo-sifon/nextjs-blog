@@ -71,29 +71,29 @@ const tools = [
 
 export default function ToolsPage() {
   // 根据环境过滤工具列表
-  const filteredTools = isVercel ? tools.filter(tool => !tool.hiddenInVercel) : tools;
+  const filteredTools = isVercel
+    ? tools.filter(tool => !tool.hiddenInVercel)
+    : tools;
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6 font-noto-serif text-gray-900 dark:text-gray-200">
-        在线工具
-      </h1>
+    <div className="container mx-auto px-4">
+      <h1 className="text-4xl font-bold mb-8 text-foreground">在线工具</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {filteredTools.map(tool => (
           <Link
             key={tool.href}
             href={tool.href}
-            className="group block p-6 bg-white dark:bg-gray-900 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+            className="group block p-6 bg-card rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-border/10 hover:border-border/20 dark:hover:bg-card/90"
           >
             <div className="flex items-center space-x-4">
-              <div className="flex-shrink-0 w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center text-blue-500 group-hover:text-blue-600 transition-colors">
+              <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-300">
                 {tool.icon}
               </div>
               <div>
-                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-200 group-hover:text-blue-500 transition-colors">
+                <h2 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors duration-300">
                   {tool.title}
                 </h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-base text-muted-foreground group-hover:text-muted-foreground transition-colors duration-300">
                   {tool.description}
                 </p>
               </div>

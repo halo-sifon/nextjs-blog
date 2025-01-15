@@ -45,9 +45,9 @@ function NavItem({ href, children, dropdownItems }: NavItemProps) {
     return (
       <Link
         href={href}
-        className={`text-gray-600 dark:text-gray-300 hover:text-gray-900 hover:underline decoration-dotted underline-offset-8 dark:hover:text-white transition-colors font-noto-serif ${
+        className={`text-muted-foreground hover:text-foreground hover:underline decoration-dotted underline-offset-8 transition-colors font-noto-serif ${
           isActive
-            ? "text-gray-900 dark:text-white underline decoration-dotted underline-offset-8"
+            ? "text-foreground underline decoration-dotted underline-offset-8"
             : ""
         }`}
       >
@@ -61,9 +61,9 @@ function NavItem({ href, children, dropdownItems }: NavItemProps) {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors font-noto-serif ${
+        className={`flex items-center text-muted-foreground hover:text-foreground transition-colors font-noto-serif ${
           isActive
-            ? "text-gray-900 dark:text-white underline decoration-dotted underline-offset-8"
+            ? "text-foreground underline decoration-dotted underline-offset-8"
             : ""
         }`}
       >
@@ -87,7 +87,7 @@ function NavItem({ href, children, dropdownItems }: NavItemProps) {
 
       {/* 下拉菜单 */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-zinc-800 ring-1 ring-black ring-opacity-5">
+        <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-card ring-1 ring-border">
           <div
             className="py-1"
             role="menu"
@@ -98,13 +98,13 @@ function NavItem({ href, children, dropdownItems }: NavItemProps) {
               <Link
                 key={item.href}
                 href={item.href}
-                className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-700"
+                className="block px-4 py-2 text-sm text-card-foreground hover:bg-muted"
                 role="menuitem"
                 onClick={() => setIsOpen(false)}
               >
                 <div className="font-medium">{item.label}</div>
                 {item.description && (
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                  <div className="text-xs text-muted-foreground">
                     {item.description}
                   </div>
                 )}
@@ -134,10 +134,10 @@ export default function Header() {
 
   return (
     <header className="bg-transparent sticky top-0 left-0 right-0 sm:top-4 z-50">
-      <nav className="mx-auto flex max-w-5xl items-center justify-between border-b bg-white/30 p-4 py-2 text-sm backdrop-blur-md transition-colors dark:border-transparent dark:bg-zinc-800/30 dark:shadow-sm sm:rounded-lg sm:border lg:px-6">
+      <nav className="mx-auto flex max-w-5xl items-center justify-between border-b bg-background/30 p-4 py-2 text-sm backdrop-blur-md transition-colors dark:border-transparent sm:rounded-lg sm:border lg:px-6">
         <Link
           href="/"
-          className="flex-shrink-0 text-2xl font-noto-sans font-semibold tracking-widest text-gray-800 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 transition-colors"
+          className="flex-shrink-0 text-2xl font-noto-sans font-semibold tracking-widest text-foreground hover:text-muted-foreground transition-colors"
         >
           SIFON
         </Link>
@@ -147,7 +147,6 @@ export default function Header() {
               <NavItem href="/posts">文章</NavItem>
             </li>
             <li>
-              {/* <NavItem href="/tools" dropdownItems={toolsDropdownItems}>工具</NavItem> */}
               <NavItem href="/tools">工具</NavItem>
             </li>
             <li>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import DOMPurify from 'isomorphic-dompurify';
+import DOMPurify from "isomorphic-dompurify";
 
 interface PostContentProps {
   content: string;
@@ -24,7 +24,7 @@ export default function PostContent({ content }: PostContentProps) {
 
         const copyButton = document.createElement("button");
         copyButton.className =
-          "copy-button absolute right-1.5 top-1.5 p-1.5 rounded bg-gray-600/70 hover:bg-gray-600 text-white opacity-0 group-hover:opacity-100 transition-opacity text-xs";
+          "copy-button absolute right-1.5 top-1.5 p-1.5 rounded bg-primary/20 hover:bg-primary/30 text-foreground opacity-0 group-hover:opacity-100 transition-opacity text-xs";
         copyButton.innerHTML = copyIcon;
 
         copyButton.addEventListener("click", async () => {
@@ -50,22 +50,40 @@ export default function PostContent({ content }: PostContentProps) {
 
   return (
     <div
-      className="prose prose-lg mx-auto font-noto-serif
-        prose-headings:font-noto-serif prose-headings:font-bold prose-headings:text-gray-900 
-        dark:prose-headings:text-gray-200
-        prose-p:text-gray-800
-        dark:prose-p:text-gray-400
-        prose-a:text-blue-700 hover:prose-a:text-blue-800
-        dark:prose-a:text-blue-400 dark:hover:prose-a:text-blue-500
-        prose-strong:text-gray-900 
-        dark:prose-strong:text-gray-200
-        prose-code:text-gray-900 prose-code:bg-gray-100 prose-code:px-1 prose-code:rounded
-        dark:prose-code:text-gray-200 dark:prose-code:bg-gray-800/50
-        prose-pre:bg-gray-100 prose-pre:border prose-pre:border-gray-300
-        dark:prose-pre:bg-gray-800/50 dark:prose-pre:border-gray-700
-        prose-blockquote:border-l-4 prose-blockquote:border-gray-300 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-800
-        dark:prose-blockquote:border-gray-700
-        prose-ul:list-disc prose-ol:list-decimal
+      className="prose prose-base mx-auto font-noto-serif
+        prose-headings:font-noto-serif 
+        prose-headings:font-bold 
+        prose-headings:text-foreground 
+        prose-headings:mt-6 
+        prose-headings:mb-4
+        prose-h1:text-2xl 
+        prose-h2:text-xl 
+        prose-h3:text-lg
+        prose-p:text-foreground 
+        prose-p:my-3
+        prose-a:text-primary 
+        prose-a:hover:text-primary/90
+        prose-strong:text-foreground
+        prose-code:text-foreground 
+        prose-code:px-1
+        prose-code:rounded 
+        prose-code:text-sm
+        prose-pre:bg-muted 
+        prose-pre:border 
+        prose-pre:border-border 
+        prose-pre:my-3
+        prose-blockquote:border-l-4 
+        prose-blockquote:border-border 
+        prose-blockquote:pl-4 
+        prose-blockquote:italic 
+        prose-blockquote:text-foreground/90 
+        prose-blockquote:my-3
+        prose-ul:list-disc 
+        prose-ol:list-decimal 
+        prose-li:my-1 
+        prose-li:text-foreground
+        prose-img:rounded-lg 
+        prose-img:my-3
         dark:prose-invert"
       dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
     />

@@ -6,11 +6,13 @@ if (!process.env.MONGODB_URI) {
 
 const uri = process.env.MONGODB_URI;
 const options: MongoClientOptions = {
-  connectTimeoutMS: 10000, // 连接超时时间
-  socketTimeoutMS: 45000,  // Socket 超时时间
+  connectTimeoutMS: 30000,     // 连接超时时间，增加到 30 秒
+  socketTimeoutMS: 45000,      // Socket 超时时间
   serverSelectionTimeoutMS: 60000, // 服务器选择超时时间
-  maxPoolSize: 10,         // 连接池大小
-  retryWrites: true,       // 启用重试写入
+  maxPoolSize: 10,             // 连接池大小
+  retryWrites: true,           // 启用重试写入
+  retryReads: true,            // 启用重试读取
+  w: 'majority',               // 写入确认级别
 };
 
 export const DB_NAME = 'blog';

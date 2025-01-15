@@ -28,11 +28,11 @@ export default async function PostPage(props: {
 
   return (
     <>
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="mb-8">
+      <div className="max-w-4xl mx-auto px-4 py-6">
+        <div className="mb-4">
           <Link
             href="/posts"
-            className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700"
+            className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
             <svg
               className="w-4 h-4 mr-2"
@@ -51,17 +51,17 @@ export default async function PostPage(props: {
           </Link>
         </div>
 
-        <article className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
-          <div className="px-8 py-6">
-            <header className="text-center mb-8">
-              <h1 className="text-3xl font-noto-serif font-bold text-gray-900 dark:text-gray-200 mb-4">
+        <article className="bg-card rounded-xl shadow-sm overflow-hidden border border-border/5">
+          <div className="px-6 py-4">
+            <header className="text-center mb-6">
+              <h1 className="text-2xl font-noto-serif font-bold text-foreground mb-3">
                 {post.title}
               </h1>
 
-              <div className="flex items-center justify-center text-sm text-gray-500 dark:text-gray-400">
+              <div className="flex items-center justify-center text-sm text-muted-foreground">
                 <span className="flex items-center">
                   <svg
-                    className="w-4 h-4 mr-2"
+                    className="w-4 h-4 mr-1"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -78,7 +78,7 @@ export default async function PostPage(props: {
                 <span className="mx-2">·</span>
                 <span className="flex items-center">
                   <svg
-                    className="w-4 h-4 mr-2"
+                    className="w-4 h-4 mr-1"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"

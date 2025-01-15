@@ -1,79 +1,107 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-:root.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-}
 
 body {
   font-family: Arial, Helvetica, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* NProgress 自定义样式 */
-#nprogress .bar {
-  background: var(--foreground) !important;
-  height: 3px !important;
-}
-
-#nprogress .peg {
-  box-shadow: 0 0 10px var(--foreground), 0 0 5px var(--foreground) !important;
-}
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 224 71.4% 4.1%;
-    --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
-    --primary: 220.9 39.3% 11%;
-    --primary-foreground: 210 20% 98%;
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 220.9 39.3% 11%;
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
-    --accent: 220 14.3% 95.9%;
-    --accent-foreground: 220.9 39.3% 11%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 224 71.4% 4.1%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    /* 主要背景色 - 纯白色 */
+    --background: #ffffff;
+    /* 主要文字颜色 - 近黑色 */
+    --foreground: #0a0a0a;
+    /* 卡片背景色 - 纯白色 */
+    --card: #ffffff;
+    /* 卡片文字颜色 - 近黑色 */
+    --card-foreground: #0a0a0a;
+    /* 弹出层背景色 - 纯白色 */
+    --popover: #ffffff;
+    /* 弹出层文字颜色 - 近黑色 */
+    --popover-foreground: #0a0a0a;
+    /* 主要强调色 - 深灰色 */
+    --primary: #1a1a1a;
+    /* 主要强调色上的文字颜色 - 近白色 */
+    --primary-foreground: #fafafa;
+    /* 次要背景色 - 浅灰色 */
+    --secondary: #f5f5f5;
+    /* 次要背景色上的文字颜色 - 深灰色 */
+    --secondary-foreground: #1a1a1a;
+    /* 静音元素背景色 - 浅灰色 */
+    --muted: #f5f5f5;
+    /* 静音元素文字颜色 - 中灰色 */
+    --muted-foreground: #737373;
+    /* 强调元素背景色 - 浅灰色 */
+    --accent: #f5f5f5;
+    /* 强调元素文字颜色 - 深灰色 */
+    --accent-foreground: #1a1a1a;
+    /* 危险操作颜色 - 红色 */
+    --destructive: #ef4444;
+    /* 危险操作文字颜色 - 近白色 */
+    --destructive-foreground: #fafafa;
+    /* 边框颜色 - 浅灰色 */
+    --border: #e5e5e5;
+    /* 输入框边框颜色 - 浅灰色 */
+    --input: #e5e5e5;
+    /* 聚焦环颜色 - 近黑色 */
+    --ring: #0a0a0a;
+    /* 图表颜色系列 - 用于数据可视化 */
+    --chart-1: #f97316;
+    --chart-2: #14b8a6;
+    --chart-3: #1e3a8a;
+    --chart-4: #eab308;
+    --chart-5: #f97316;
+    /* 边框圆角大小 */
     --radius: 0.5rem;
   }
+
   .dark {
-    --background: 224 71.4% 4.1%;
-    --foreground: 210 20% 98%;
-    --card: 224 71.4% 4.1%;
-    --card-foreground: 210 20% 98%;
-    --popover: 224 71.4% 4.1%;
-    --popover-foreground: 210 20% 98%;
-    --primary: 210 20% 98%;
-    --primary-foreground: 220.9 39.3% 11%;
-    --secondary: 215 27.9% 16.9%;
-    --secondary-foreground: 210 20% 98%;
-    --muted: 215 27.9% 16.9%;
-    --muted-foreground: 217.9 10.6% 64.9%;
-    --accent: 215 27.9% 16.9%;
-    --accent-foreground: 210 20% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 215 27.9% 16.9%;
-    --input: 215 27.9% 16.9%;
-    --ring: 216 12.2% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    /* 主要背景色 - 深邃但不刺眼的黑色 */
+    --background: #0a0a0a;
+    /* 文字颜色 - 纯白色以提供最大对比度 */
+    --foreground: #ffffff;
+    /* 卡片背景 - 深色但比主背景略浅 */
+    --card: #141414;
+    /* 卡片文字颜色 - 白色 */
+    --card-foreground: #ffffff;
+    /* 弹出层 - 比卡片更浅，更容易分辨 */
+    --popover: #1a1a1a;
+    /* 弹出层文字颜色 - 近黑色 */
+    --popover-foreground: #ffffff;
+    /* 主要强调色 - 使用更亮的颜色 */
+    --primary: #60a5fa;
+    /* 主要强调色上的文字颜色 - 近白色 */
+    --primary-foreground: #ffffff;
+    /* 次要背景 - 用于区分不同区域 */
+    --secondary: #1f1f1f;
+    /* 次要背景色上的文字颜色 - 白色 */
+    --secondary-foreground: #ffffff;
+    /* 静音元素 - 增加对比度的次要文字 */
+    --muted: #262626;
+    /* 静音元素文字颜色 - 中灰色 */
+    --muted-foreground: #d4d4d4;
+    /* 强调区域 - 用于高亮显示 */
+    --accent: #2563eb;
+    /* 强调区域上的文字颜色 - 白色 */
+    --accent-foreground: #ffffff;
+    /* 危险操作 - 鲜明的红色 */
+    --destructive: #ef4444;
+     /* 危险操作文字颜色 - 近白色 */
+    --destructive-foreground: #ffffff;
+    /* 边框 - 更明显的分隔线 */
+    --border: #262626;
+    /* 输入框 - 更明显的边框颜色 */
+    --input: #404040;
+    /* 聚焦环 - 明亮的蓝色 */
+    --ring: #60a5fa;
+    /* 图表颜色 - 明亮且易区分的色彩 */
+    --chart-1: #60a5fa; /* 亮蓝色 */
+    --chart-2: #34d399; /* 亮绿色 */
+    --chart-3: #f97316; /* 橙色 */
+    --chart-4: #a78bfa; /* 亮紫色 */
+    --chart-5: #f472b6; /* 粉色 */
   }
 }
 
@@ -84,4 +112,14 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* NProgress 自定义样式 */
+#nprogress .bar {
+  background: var(--foreground) !important;
+  height: 3px !important;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px var(--foreground), 0 0 5px var(--foreground) !important;
 }
