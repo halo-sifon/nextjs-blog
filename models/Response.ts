@@ -1,7 +1,7 @@
-interface ResponseProps<T = any> {
+export interface ResponseProps<T = any> {
   data: T | null;
   message: string;
-  showType: "slient" | "error" | "success";
+  showType: "slient" | "error" | "success" | "warning";
 }
 
 class ApiResponse<T> {
