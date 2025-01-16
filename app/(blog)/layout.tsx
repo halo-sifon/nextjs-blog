@@ -7,10 +7,10 @@ export default function BlogLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    <main className="flex flex-col min-h-screen relative">
       <Header />
-      {children}
+      <main className="flex-grow sm:mt-4">{children}</main>
       <Footer />
-    </>
+    </main>
   );
 }

@@ -39,7 +39,7 @@ export default function RootLayout({
     <html lang="zh-CN" suppressHydrationWarning>
       <body
         suppressHydrationWarning
-        className={`${notoSerifSC.variable} ${notoSansSC.variable} flex flex-col min-h-screen relative`}
+        className={`${notoSerifSC.variable} ${notoSansSC.variable}`}
       >
         <ThemeProvider
           attribute="class"
@@ -49,10 +49,8 @@ export default function RootLayout({
           storageKey="theme"
         >
           <ProgressBar />
-          {/* <Header /> */}
-          <main className="flex-grow">{children}</main>
-          {/* <Footer /> */}
-          <Toaster richColors position="top-right" />
+          <Toaster position="top-right" />
+          {children}
         </ThemeProvider>
       </body>
     </html>

@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect, Suspense } from 'react';
-import NProgress from 'nprogress';
-import { usePathname, useSearchParams } from 'next/navigation';
-import 'nprogress/nprogress.css';
+import { useEffect, Suspense } from "react";
+import NProgress from "nprogress";
+import { usePathname, useSearchParams } from "next/navigation";
+import "nprogress/nprogress.css";
 
 // 配置进度条
 NProgress.configure({
@@ -20,18 +20,25 @@ function ProgressBarContent() {
     // 在组件挂载时添加点击事件监听
     const handleClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      const anchor = target.closest('a');
-      if (anchor?.href && !anchor.href.startsWith('#') && anchor.href !== window.location.href) {
+      const anchor = target.closest("a");
+      if (anchor?.href.startsWith("http") || anchor?.href.startsWith("https")) {
+        return;
+      }
+      if (
+        anchor?.href &&
+        !anchor.href.startsWith("#") &&
+        anchor.href !== window.location.href
+      ) {
         NProgress.start();
       }
     };
 
-    document.addEventListener('click', handleClick);
-    window.addEventListener('beforeunload', NProgress.start);
+    document.addEventListener("click", handleClick);
+    window.addEventListener("beforeunload", NProgress.start);
 
     return () => {
-      document.removeEventListener('click', handleClick);
-      window.removeEventListener('beforeunload', NProgress.start);
+      document.removeEventListener("click", handleClick);
+      window.removeEventListener("beforeunload", NProgress.start);
     };
   }, []);
 
@@ -48,4 +55,4 @@ export default function ProgressBar() {
       <ProgressBarContent />
     </Suspense>
   );
-} 
+}
