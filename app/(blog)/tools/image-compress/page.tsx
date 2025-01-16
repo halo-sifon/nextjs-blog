@@ -236,7 +236,7 @@ export default function ImageCompressPage() {
   };
 
   return (
-    <div>
+    <div className="w-full p-4">
       <h1 className="text-2xl font-bold mb-6 font-noto-serif">图片压缩</h1>
       <div className="space-y-6">
         <div

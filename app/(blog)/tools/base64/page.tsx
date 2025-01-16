@@ -49,9 +49,8 @@ export default function Base64Page() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="w-full p-4">
       <h1 className="text-2xl font-bold mb-6 font-noto-serif">Base64 转换</h1>
-
       <div className="space-y-6">
         {/* 文本转 Base64 */}
         <div className="bg-card rounded-lg p-6 shadow-sm">

@@ -4,10 +4,8 @@ export default function ToolsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className=" rounded-xl shadow-sm overflow-hidden">
-        <div className="p-6">{children}</div>
-      </div>
+    <div className="max-w-5xl mx-auto flex flex-col items-center bg-background">
+      {children}
     </div>
   );
 }

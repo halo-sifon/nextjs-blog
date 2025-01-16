@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { showToast } from "@/libs/utils";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import Image from "next/image";
 import { saveAs } from "file-saver";
 
@@ -29,7 +29,7 @@ export default function DouyinDownload() {
   const processInputText = (text: string) => {
     // 移除多余的空格和换行符
     text = text.trim();
-    
+
     // 尝试匹配链接
     const urlMatch = text.match(/(https?:\/\/[^\s]+)/);
     if (urlMatch) {
@@ -49,7 +49,7 @@ export default function DouyinDownload() {
   // 处理粘贴事件
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const text = e.clipboardData.getData('text');
+    const text = e.clipboardData.getData("text");
     const processedText = processInputText(text);
     setShareUrl(processedText);
   };
@@ -71,11 +71,14 @@ export default function DouyinDownload() {
       const { data } = await axios.post("/api/douyin/parse", {
         url: shareUrl,
       });
+      console.log(data);
 
       setVideoInfo(data.data);
     } catch (err: unknown) {
       const errorMessage =
-        err instanceof Error ? err.message : "视频解析失败，请检查链接是否正确";
+        err instanceof AxiosError
+          ? err.response?.data?.message || "视频解析失败，请检查链接是否正确"
+          : "视频解析失败，请检查链接是否正确";
       showToast.error(errorMessage);
     } finally {
       setIsLoading(false);
@@ -119,13 +122,8 @@ export default function DouyinDownload() {
   };
 
   return (
-    <div className="container mx-auto p-4 md:p-6 space-y-4 md:space-y-6">
-      <div className="space-y-2">
-        <h1 className="text-2xl font-bold">抖音视频下载工具</h1>
-        <p className="text-sm md:text-base text-muted-foreground">
-          支持无水印下载抖音视频，粘贴分享链接即可使用
-        </p>
-      </div>
+    <div className="w-full p-4">
+      <h1 className="text-2xl font-bold mb-6 font-noto-serif">抖音视频下载</h1>
 
       {/* 输入区域 */}
       <Card className="p-3 md:p-4 space-y-4">

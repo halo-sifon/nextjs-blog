@@ -2,9 +2,11 @@ import Image from "next/image";
 
 export default function AboutPage() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8 text-foreground">关于我</h1>
+    <div className="w-full p-4 max-w-5xl mx-auto flex flex-col items-center bg-background">
+      <div className="">
+        <h1 className="text-4xl font-bold mb-8 text-foreground font-noto-serif">
+          关于我
+        </h1>
 
         <div className="flex flex-col md:flex-row gap-8 items-start">
           <div className="w-48 h-48 relative rounded-full overflow-hidden flex-shrink-0">
@@ -19,7 +21,9 @@ export default function AboutPage() {
           </div>
 
           <div className="flex-grow">
-            <h2 className="text-2xl font-semibold mb-4 text-foreground">ShengHao Chen</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-foreground">
+              ShengHao Chen
+            </h2>
             <p className="text-muted-foreground mb-4">前端开发工程师</p>
 
             <div className="space-y-4">
@@ -29,14 +33,18 @@ export default function AboutPage() {
                 。
               </p>
 
-              <h3 className="text-xl font-semibold mt-6 text-foreground">Skills</h3>
+              <h3 className="text-xl font-semibold mt-6 text-foreground">
+                Skills
+              </h3>
               <ul className="list-disc list-inside space-y-2 text-foreground">
                 <li>前端: React, Next.js, TypeScript, Tailwind CSS</li>
                 <li>后端: Node.js, Express, Mysql</li>
                 <li>工具: Git, Docker</li>
               </ul>
 
-              <h3 className="text-xl font-semibold mt-6 text-foreground">Contact</h3>
+              <h3 className="text-xl font-semibold mt-6 text-foreground">
+                Contact
+              </h3>
               <p className="text-foreground">
                 Email:{" "}
                 <a
