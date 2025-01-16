@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { Admin } from "@/models/admin";
 import { FailResponse, SuccessResponse } from "~/models/Response";
 import { HttpStatusCode } from "axios";
-import jwt from "jsonwebtoken";
+import { SignJWT } from "jose";
 import { connectDB } from "~/libs/mongodb";
+import { Types } from "mongoose";
 
 export async function POST(request: NextRequest) {
   try {
@@ -34,10 +35,13 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // 生成 使用jwt的token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || "", {
-      expiresIn: "1d",
-    });
+    // 使用 jose 生成 token
+    const token = await new SignJWT({
+      id: (user._id as Types.ObjectId).toString(),
+    })
+      .setProtectedHeader({ alg: "HS256" })
+      .setExpirationTime("1d")
+      .sign(new TextEncoder().encode(process.env.JWT_SECRET || ""));
 
     // 设置cookie
     const response = NextResponse.json(
