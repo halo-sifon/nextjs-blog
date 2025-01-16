@@ -1,12 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Noto_Serif_SC, Noto_Sans_SC } from "next/font/google";
-import "./globals.css";
-import Header from "~/components/header";
-import Footer from "~/components/footer";
-import ProgressBar from "~/components/progress-bar";
-import AnimatedLayout from "~/components/animated-layout";
-import { ThemeProvider } from "~/providers/theme-provider";
+import { Noto_Sans_SC, Noto_Serif_SC } from "next/font/google";
 import { Toaster } from "sonner";
+import ProgressBar from "~/components/progress-bar";
+import { ThemeProvider } from "~/providers/theme-provider";
+import "./globals.css";
 
 const notoSerifSC = Noto_Serif_SC({
   weight: ["400", "700"],
@@ -52,11 +49,9 @@ export default function RootLayout({
           storageKey="theme"
         >
           <ProgressBar />
-          <Header />
-          <main className="flex-grow">
-            <AnimatedLayout>{children}</AnimatedLayout>
-          </main>
-          <Footer />
+          {/* <Header /> */}
+          <main className="flex-grow">{children}</main>
+          {/* <Footer /> */}
           <Toaster richColors position="top-right" />
         </ThemeProvider>
       </body>
