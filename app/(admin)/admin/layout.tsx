@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   LogOut,
   Settings,
+  Video
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -28,6 +29,11 @@ const sidebarItems = [
     title: "数据统计",
     href: "/admin/analytics",
     icon: BarChart2,
+  },
+  {
+    title: "抖音下载",
+    href: "/admin/douyin",
+    icon: Video,
   },
   {
     title: "系统设置",
