@@ -9,7 +9,7 @@ import {
   XIcon,
 } from "~/components/icon";
 import { Input } from "~/components/ui";
-import { Search, Code } from "lucide-react";
+import { Search, Code, Package, MessageCircle } from "lucide-react";
 
 type ColorType = "blue" | "gray" | "pink" | "red" | "orange" | "purple";
 
@@ -80,6 +80,18 @@ const navLinks: {
         url: "https://github.com",
         icon: GithubIcon,
         color: "gray",
+      },
+      {
+        name: "Npm",
+        url: "https://www.npmjs.com",
+        icon: Package,
+        color: "pink",
+      },
+      {
+        name: "ChatGPT",
+        url: "https://chatgpt.com",
+        icon: MessageCircle,
+        color: "red",
       },
     ],
   },
