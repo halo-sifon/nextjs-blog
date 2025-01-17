@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
-import { showToast } from "./utils";
 import { ResponseProps } from "~/models/Response";
+import { showToast } from "./utils";
 
 // 扩展 AxiosRequestConfig 类型
 declare module "axios" {
@@ -19,6 +19,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   config => {
     // 可以在这里添加请求头或其他配置
+
     return config;
   },
   error => {
@@ -30,7 +31,6 @@ axiosInstance.interceptors.request.use(
 // 响应拦截器
 axiosInstance.interceptors.response.use(
   response => {
-    // 可以在这里处理响应数据
     return response.data;
   },
   (error: AxiosError<ResponseProps>) => {

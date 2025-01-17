@@ -36,4 +36,28 @@ class FailResponse<T> extends ApiResponse<T> {
   }
 }
 
-export { ApiResponse, SuccessResponse, FailResponse };
+interface ListData<T> {
+  list: T[];
+  total: number;
+  hasMore: boolean;
+  currentPage: number;
+  totalPages: number;
+}
+
+class ListResponse<T> extends SuccessResponse<ListData<T>> {
+  constructor({
+    data = {
+      list: [],
+      total: 0,
+      hasMore: false,
+      currentPage: 1,
+      totalPages: 1,
+    },
+    message = "操作成功",
+    showType = "slient",
+  }: Partial<ResponseProps<ListData<T>>>) {
+    super({ data, message, showType });
+  }
+}
+
+export { ApiResponse, SuccessResponse, FailResponse, ListResponse };
