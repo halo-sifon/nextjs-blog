@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Admin } from "@/models/Admin";
+import { Admin } from "@/models/AAdmin";
 import { FailResponse, SuccessResponse } from "@/models/Response";
 import { HttpStatusCode } from "axios";
 import { SignJWT } from "jose";
