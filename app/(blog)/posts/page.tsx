@@ -33,7 +33,10 @@ export default async function PostsPage() {
             key={post.id}
             className="group flex items-center justify-between rounded-lg border p-4 transition-all hover:bg-muted/50"
           >
-            <Link href={`/posts/${post.slug}`} className="flex-1">
+            <Link
+              href={`/posts/${post.category}/${post.title}`}
+              className="flex-1"
+            >
               <div className="flex items-center justify-between gap-4">
                 <h2 className="text-xl font-semibold tracking-tight hover:underline">
                   {post.title}

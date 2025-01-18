@@ -18,11 +18,12 @@ export default async function PostPage(props: {
   params: Promise<{ slug: string[] }>;
 }) {
   const params = await props.params;
-  const slug = params.slug.join("/");
+
+  const [category, title] = params.slug.map(slug => decodeURIComponent(slug));
 
   // 连接数据库并获取文章
   await connectDB();
-  const post = await Post.findOne({ slug });
+  const post = await Post.findOne({ category, title });
 
   if (!post) {
     return notFound();

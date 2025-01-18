@@ -97,3 +97,13 @@
     - 添加 Markdown 格式提示
     - 使用等宽字体优化编辑体验
     - 美化预览样式 
+
+## 2024-03-22
+- 修复文章链接 404 问题
+  - 修改 `app/(blog)/posts/page.tsx`：
+    - 使用 `encodeURIComponent` 对文章分类和标题进行 URL 编码
+  - 修改 `app/(blog)/posts/[...slug]/page.tsx`：
+    - 使用 `decodeURIComponent` 对 URL 中的 slug 进行解码
+  - 改进：
+    - 确保特殊字符能够正确显示在 URL 中
+    - 确保能在数据库中正确查询到文章 
