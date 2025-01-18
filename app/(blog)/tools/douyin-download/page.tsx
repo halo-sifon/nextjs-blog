@@ -106,9 +106,9 @@ export default function DouyinDownload() {
       if (!response.ok) throw new Error("下载失败");
 
       const contentLength = response.headers.get("content-length");
+
       const total = contentLength ? parseInt(contentLength, 10) : 0;
       let loaded = 0;
-
       // 创建可读流
       const reader = response.body?.getReader();
       const chunks: Uint8Array[] = [];
