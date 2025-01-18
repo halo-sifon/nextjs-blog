@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     const videoUrl = video
       ? video.includes("mp3")
         ? video
-        : `https://www.douyin.com/aweme/v1/play/?video_id=${video}`
+        : `https://aweme.snssdk.com/aweme/v1/play/?video_id=${video}&ratio=1080p&line=0`
       : null;
 
     const output = {

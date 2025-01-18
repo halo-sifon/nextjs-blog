@@ -8,6 +8,7 @@ import { showToast } from "@/lib/utils";
 import axios, { AxiosError } from "axios";
 import Image from "next/image";
 import { saveAs } from "file-saver";
+import { Progress } from "@/components/ui/progress";
 
 interface VideoInfo {
   awemeId: string;
@@ -24,6 +25,7 @@ export default function DouyinDownload() {
   const [isLoading, setIsLoading] = useState(false);
   const [videoInfo, setVideoInfo] = useState<Partial<VideoInfo> | null>(null);
   const [downloadingIndex, setDownloadingIndex] = useState<number | null>(null);
+  const [downloadProgress, setDownloadProgress] = useState<number>(0);
 
   // 处理输入文本，提取链接
   const processInputText = (text: string) => {
@@ -94,15 +96,46 @@ export default function DouyinDownload() {
     if (index !== undefined) {
       setDownloadingIndex(index);
     }
+    setDownloadProgress(0);
     try {
+      showToast.info("开始下载");
       const response = await fetch(
         `/api/douyin/play?url=${encodeURIComponent(url)}`
       );
-      const blob = await response.blob();
+
+      if (!response.ok) throw new Error("下载失败");
+
+      const contentLength = response.headers.get("content-length");
+      const total = contentLength ? parseInt(contentLength, 10) : 0;
+      let loaded = 0;
+
+      // 创建可读流
+      const reader = response.body?.getReader();
+      const chunks: Uint8Array[] = [];
+
+      if (!reader) throw new Error("下载失败");
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        chunks.push(value);
+        loaded += value.length;
+
+        if (total) {
+          const progress = Math.round((loaded / total) * 100);
+          setDownloadProgress(progress);
+        }
+      }
+
+      // 合并chunks并创建blob
+      const blob = new Blob(chunks);
       saveAs(blob, filename);
+      showToast.success("下载成功");
     } catch {
       showToast.error("下载失败，请重试");
     } finally {
+      setDownloadProgress(0);
       if (index !== undefined) {
         setDownloadingIndex(null);
       }
@@ -243,20 +276,33 @@ export default function DouyinDownload() {
                       )
                     }
                     className="flex items-center gap-2"
+                    disabled={downloadProgress > 0}
                   >
-                    下载视频
+                    {downloadProgress > 0
+                      ? `下载中 ${downloadProgress}%`
+                      : "下载视频"}
                   </Button>
+                  {downloadProgress > 0 && (
+                    <Progress value={downloadProgress} className="w-full" />
+                  )}
                 </>
               ) : (
-                <Button
-                  onClick={downloadAllImages}
-                  disabled={downloadingIndex !== null}
-                  className="flex items-center gap-2"
-                >
-                  {downloadingIndex !== null
-                    ? `正在下载第 ${downloadingIndex + 1} 张`
-                    : "下载全部图片"}
-                </Button>
+                <>
+                  <Button
+                    onClick={downloadAllImages}
+                    disabled={downloadingIndex !== null}
+                    className="flex items-center gap-2"
+                  >
+                    {downloadingIndex !== null
+                      ? `正在下载第 ${
+                          downloadingIndex + 1
+                        } 张 ${downloadProgress}%`
+                      : "下载全部图片"}
+                  </Button>
+                  {downloadProgress > 0 && (
+                    <Progress value={downloadProgress} className="w-full" />
+                  )}
+                </>
               )}
             </div>
           </div>
