@@ -31,17 +31,17 @@ export default async function PostsPage() {
         {posts.map(post => (
           <article
             key={post.id}
-            className="group flex items-center justify-between rounded-lg border p-4 transition-all hover:bg-muted/50"
+            className="group flex items-center justify-between border-b p-4 transition-all hover:bg-muted/50"
           >
             <Link
               href={`/posts/${post.category}/${post.title}`}
               className="flex-1"
             >
               <div className="flex items-center justify-between gap-4">
-                <h2 className="text-xl font-semibold tracking-tight hover:underline">
+                <h2 className="text-xl font-medium tracking-tight hover:underline text-ellipsis min-w-0 line-clamp-2">
                   {post.title}
                 </h2>
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-4 text-sm text-muted-foreground shrink-0">
                   <span>{post.category}</span>
                   <time dateTime={new Date(post.publishDate).toISOString()}>
                     {formatDate(post.publishDate)}

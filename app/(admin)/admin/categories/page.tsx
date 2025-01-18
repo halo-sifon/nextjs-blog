@@ -22,6 +22,17 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/components/ui/alert-dialog";
 import axiosInstance from "~/lib/request";
 import { ICategory } from "~/models/Category";
 import { PaginationResponse } from "~/types/api";
@@ -61,8 +72,6 @@ export default function AdminCategories() {
 
   // 删除分类
   const handleDelete = async (id: string) => {
-    if (!confirm("确定要删除这个分类吗？")) return;
-
     try {
       await axiosInstance.delete(`/categories`, {
         params: { id },
@@ -70,9 +79,7 @@ export default function AdminCategories() {
 
       toast.success("删除成功");
       fetchCategories(); // 重新获取列表
-    } catch {
-      toast.error("删除失败");
-    }
+    } catch {}
   };
 
   useEffect(() => {
@@ -143,13 +150,32 @@ export default function AdminCategories() {
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => handleDelete(category._id!)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>确认删除</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                确定要删除分类 &ldquo;{category.title}&rdquo; 吗？如果该分类下还有文章，将无法删除。
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>取消</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDelete(category._id!)}
+                              >
+                                确认删除
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </TableCell>
                     </TableRow>
                   ))}

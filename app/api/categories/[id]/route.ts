@@ -1,9 +1,9 @@
+import { HttpStatusCode } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "~/lib/mongodb";
-import { Category } from "~/models/Category";
 import { validateToken } from "~/middleware/auth";
+import { Category } from "~/models/Category";
 import { FailResponse, SuccessResponse } from "~/models/Response";
-import { HttpStatusCode } from "axios";
 
 /**
  * 获取单个分类详情

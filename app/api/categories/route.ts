@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "~/lib/mongodb";
 import { Category } from "~/models/Category";
+import { Post } from "~/models/Post";
 import { validateToken } from "~/middleware/auth";
 import { FailResponse, ListResponse, SuccessResponse } from "~/models/Response";
 import { HttpStatusCode } from "axios";
@@ -140,7 +141,16 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const category = await Category.findByIdAndUpdate(
+    // 1. 先获取原始分类信息
+    const oldCategory = await Category.findById(id);
+    if (!oldCategory) {
+      return NextResponse.json(new FailResponse({ message: "分类不存在" }), {
+        status: HttpStatusCode.BadRequest,
+      });
+    }
+
+    // 2. 更新分类信息
+    const updatedCategory = await Category.findByIdAndUpdate(
       id,
       {
         ...updateData,
@@ -149,13 +159,26 @@ export async function PUT(request: NextRequest) {
       { new: true, runValidators: true }
     );
 
-    if (!category) {
-      return NextResponse.json(new FailResponse({ message: "分类不存在" }), {
+    if (!updatedCategory) {
+      return NextResponse.json(new FailResponse({ message: "更新分类失败" }), {
         status: HttpStatusCode.BadRequest,
       });
     }
 
-    return NextResponse.json(new SuccessResponse({ data: category }));
+    // 3. 如果分类的 slug 发生变化，更新所有相关文章
+    if (oldCategory.slug !== updatedCategory.slug) {
+      await Post.updateMany(
+        { category: oldCategory.slug },
+        { category: updatedCategory.slug }
+      );
+    }
+
+    return NextResponse.json(
+      new SuccessResponse({
+        data: updatedCategory,
+        message: "分类更新成功，相关文章已同步更新",
+      })
+    );
   } catch (error) {
     console.error("更新分类失败:", error);
     return NextResponse.json(new FailResponse({ message: "更新分类失败" }), {
@@ -191,13 +214,25 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const category = await Category.findByIdAndDelete(id);
-
+    // 1. 获取分类信息
+    const category = await Category.findById(id);
     if (!category) {
       return NextResponse.json(new FailResponse({ message: "分类不存在" }), {
         status: HttpStatusCode.BadRequest,
       });
     }
+
+    // 2. 检查是否有文章使用此分类
+    const postsCount = await Post.countDocuments({ category: category.slug });
+    if (postsCount > 0) {
+      return NextResponse.json(
+        new FailResponse({ message: "该分类下还有文章，无法删除" }),
+        { status: HttpStatusCode.BadRequest }
+      );
+    }
+
+    // 3. 删除分类
+    await Category.findByIdAndDelete(id);
 
     return NextResponse.json(new SuccessResponse({ message: "分类删除成功" }));
   } catch (error) {

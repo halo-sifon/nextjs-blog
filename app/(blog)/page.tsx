@@ -205,7 +205,7 @@ export default function Home() {
     .filter(category => category.links.length > 0);
 
   return (
-    <div className="flex flex-col items-center justify-center bg-background">
+    <div className="flex flex-col items-center justify-center">
       {/* 搜索框 */}
       <div className="w-full max-w-5xl p-4 my-8">
         <div className="relative flex justify-center w-full mb-6">
