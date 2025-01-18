@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 import { FailResponse, SuccessResponse } from "@/models/Response";
+import { Douyin } from "@/models/Douyin";
+import { connectDB } from "@/lib/mongodb";
 
 const headers = {
   "User-Agent":
@@ -73,10 +75,50 @@ export async function POST(request: NextRequest) {
         : [],
       type: images ? "images" : "video",
     };
-    return NextResponse.json(new SuccessResponse({ data: output }));
+
+    await connectDB();
+    // 检查是否已存在相同的 awemeId
+    const existingDouyin = await Douyin.findOne({ awemeId });
+    if (existingDouyin) {
+      // 如果存在，增加下载次数
+      await Douyin.findByIdAndUpdate(existingDouyin._id, {
+        $inc: { downloads: 1 },
+      });
+      return NextResponse.json(
+        new SuccessResponse({
+          data: {
+            ...output,
+            downloads: (existingDouyin.downloads || 0) + 1,
+            _id: existingDouyin._id,
+          },
+        })
+      );
+    }
+
+    // 如果不存在，创建新记录
+    const newDouyin = await Douyin.create({
+      ...output,
+      downloads: 1, // 初始下载次数为1
+    });
+
+    return NextResponse.json(
+      new SuccessResponse({
+        data: {
+          ...output,
+          downloads: 1,
+          _id: newDouyin._id,
+        },
+      })
+    );
   } catch (error) {
     console.error("Error fetching video data:", error);
-    return NextResponse.json(new FailResponse({ message: "解析失败" }));
+    const _error = error as Error;
+    return NextResponse.json(
+      new FailResponse({ message: _error.message || "解析失败" }),
+      {
+        status: axios.HttpStatusCode.InternalServerError,
+      }
+    );
   }
 }
 

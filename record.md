@@ -130,3 +130,16 @@
   - 修改文件：
     - `app/api/user/login/route.ts`
     - `app/api/user/register/route.ts` 
+
+## 2024-03-23
+- 添加抖音内容 Model
+  - 新增 `models/Douyin.ts`：创建抖音内容的数据模型
+    - 支持视频和图片两种类型的内容
+    - 包含作者、标题、视频/图片地址等字段
+    - 添加 awemeId 唯一索引
+    - 添加创建时间索引
+  - 特点：
+    - 支持视频和图片集合两种类型
+    - 自动管理创建和更新时间
+    - 优化查询性能的索引设计
+    - 类型安全的 TypeScript 接口定义 
