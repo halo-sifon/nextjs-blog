@@ -8,6 +8,7 @@ import PostContent from "./post-content";
 import { Post } from "@/models/Post";
 import { connectDB } from "@/lib/mongodb";
 import { Tag, Tags } from "lucide-react";
+import { Category, ICategory } from "@/models/Category";
 
 const md = new MarkdownIt({
   html: true,
@@ -24,7 +25,11 @@ export default async function PostPage(props: {
 
   // 连接数据库并获取文章
   await connectDB();
-  const post = await Post.findOne({ category, title });
+  const post = await Post.findOne({ category, title }).populate({
+    path: "category",
+    model: Category,
+    select: "title slug",
+  });
 
   if (!post) {
     return notFound();
@@ -88,7 +93,7 @@ export default async function PostPage(props: {
                 <span className="mx-2">·</span>
                 <span className="flex items-center">
                   <Tag className="w-4 h-4 mr-1" />
-                  {post.category}
+                  {(post.category as ICategory).title}
                 </span>
                 {post.tags && post.tags.length > 0 && (
                   <>

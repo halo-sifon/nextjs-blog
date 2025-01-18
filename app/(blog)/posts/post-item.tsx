@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -12,6 +12,7 @@ interface PostItemProps {
     id: string;
     title: string;
     category: string;
+    slug: string;
     publishDate: string;
     tags?: string[];
   };
@@ -24,7 +25,7 @@ export function PostItem({ post }: PostItemProps) {
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    router.push(`/posts/${post.category}/${post.title}`);
+    router.push(`/posts/${post.slug}/${post.title}`);
   };
 
   return (
@@ -35,7 +36,7 @@ export function PostItem({ post }: PostItemProps) {
         </div>
       )}
       <Link
-        href={`/posts/${post.category}/${post.title}`}
+        href={`/posts/${post.slug}/${post.title}`}
         className="flex-1"
         onClick={handleClick}
       >
@@ -62,4 +63,4 @@ export function PostItem({ post }: PostItemProps) {
       </Link>
     </article>
   );
-} 
+}

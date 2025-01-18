@@ -27,6 +27,7 @@ import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
 import axiosInstance from "@/lib/request";
 import { IPost } from "@/models/Post";
 import { PaginationResponse } from "@/types/api";
+import { ICategory } from "@/models/Category";
 
 export default function AdminPosts() {
   const [posts, setPosts] = useState<IPost[]>([]);
@@ -148,7 +149,9 @@ export default function AdminPosts() {
                           </div>
                         )}
                       </TableCell>
-                      <TableCell>{post.category}</TableCell>
+                      <TableCell>
+                        {post.category && (post.category as ICategory).title}
+                      </TableCell>
                       <TableCell>
                         {post.tags && post.tags.length > 0 ? (
                           <div className="flex items-center gap-1">
@@ -182,7 +185,9 @@ export default function AdminPosts() {
                       <TableCell className="text-right space-x-2">
                         <Button variant="outline" size="icon" asChild>
                           <Link
-                            href={`/posts/${post.category}/${post.title}`}
+                            href={`/posts/${
+                              (post.category as ICategory).slug
+                            }/${post.title}`}
                             target="_blank"
                           >
                             <Eye className="w-4 h-4" />

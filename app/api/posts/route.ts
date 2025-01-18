@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { Post } from "@/models/Post";
+import { Category } from "@/models/Category";
 import { validateToken } from "@/middleware/auth";
 import { FailResponse, ListResponse, SuccessResponse } from "@/models/Response";
 import { HttpStatusCode } from "axios";
@@ -46,13 +47,21 @@ export async function GET(request: NextRequest) {
     if (status) {
       query.status = status;
     }
+
     // 计算总数和分页
     const total = await Post.countDocuments(query);
+
+    // 获取文章列表，并处理分类信息
     const posts = await Post.find(query)
       .sort({ publishDate: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
-      .select("-content"); // 列表不返回完整内容
+      .select("-content")
+      .populate({
+        path: "category",
+        model: Category,
+        select: "title slug",
+      });
 
     const hasMore = total > page * limit;
 

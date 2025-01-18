@@ -169,7 +169,7 @@ export default function EditPost({ params }: PageProps) {
       <div className="space-y-2">
         <Label htmlFor="category">分类</Label>
         <Select
-          value={post.category}
+          value={post.category as string}
           onValueChange={value => setPost({ ...post, category: value })}
         >
           <SelectTrigger>
@@ -177,7 +177,10 @@ export default function EditPost({ params }: PageProps) {
           </SelectTrigger>
           <SelectContent>
             {categories.map(category => (
-              <SelectItem key={category._id} value={category.slug}>
+              <SelectItem
+                key={category._id}
+                value={category._id?.toString() || ""}
+              >
                 {category.title}
               </SelectItem>
             ))}
@@ -267,7 +270,10 @@ export default function EditPost({ params }: PageProps) {
             type="button"
             variant="outline"
             onClick={() =>
-              window.open(`/posts/${post.category}/${post.title}`, "_blank")
+              window.open(
+                `/posts/${(post.category as ICategory).slug}/${post.title}`,
+                "_blank"
+              )
             }
           >
             预览

@@ -1,11 +1,12 @@
 import mongoose, { Model, model } from "mongoose";
+import { ICategory } from "./Category";
 
 // 定义文章模型的接口
 export interface IPost {
   _id?: string; // MongoDB ID
   title: string; // 标题
   content: string; // 内容
-  category: string; // 分类
+  category: string | ICategory; // 分类
   summary?: string; // 摘要
   tags?: string[]; // 标签
   publishDate: Date; // 发布时间
