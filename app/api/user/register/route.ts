@@ -1,4 +1,4 @@
-import { Admin } from "@/models/AAdmin";
+import { Admin } from "@/models/Admin";
 import { HttpStatusCode } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
