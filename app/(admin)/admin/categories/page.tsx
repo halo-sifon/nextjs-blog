@@ -1,7 +1,6 @@
 "use client";
 
-import { Edit, Eye, Plus, Tag, Trash2 } from "lucide-react";
-import Link from "next/link";
+import { Edit, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -24,11 +23,11 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import axiosInstance from "~/lib/request";
-import { IPost } from "~/models/Post";
+import { ICategory } from "~/models/Category";
 import { PaginationResponse } from "~/types/api";
 
-export default function AdminPosts() {
-  const [posts, setPosts] = useState<IPost[]>([]);
+export default function AdminCategories() {
+  const [categories, setCategories] = useState<ICategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [pageInfo, setPageInfo] = useState({
     currentPage: 1,
@@ -37,53 +36,47 @@ export default function AdminPosts() {
   });
   const router = useRouter();
 
-  // 获取文章列表
-  const fetchPosts = async (page = 1) => {
+  // 获取分类列表
+  const fetchCategories = async (page = 1) => {
     try {
-      const { data } = await axiosInstance.get<PaginationResponse<IPost>>(
-        "/posts",
+      const { data } = await axiosInstance.get<PaginationResponse<ICategory>>(
+        "/categories",
         {
           params: { page, limit: 10 },
         }
       );
 
-      setPosts(data?.list || []);
+      setCategories(data?.list || []);
       setPageInfo({
         currentPage: data?.currentPage || 1,
         totalPages: data?.totalPages || 1,
         total: data?.total || 0,
       });
     } catch {
-      toast.error("获取文章列表失败");
+      toast.error("获取分类列表失败");
     } finally {
       setLoading(false);
     }
   };
 
-  // 删除文章
+  // 删除分类
   const handleDelete = async (id: string) => {
-    if (!confirm("确定要删除这篇文章吗？")) return;
+    if (!confirm("确定要删除这个分类吗？")) return;
 
     try {
-      const res = await fetch(`/api/posts?id=${id}`, {
-        method: "DELETE",
+      await axiosInstance.delete(`/categories`, {
+        params: { id },
       });
-      const data = await res.json();
-
-      if (data.error) {
-        toast.error(data.error);
-        return;
-      }
 
       toast.success("删除成功");
-      fetchPosts(); // 重新获取列表
+      fetchCategories(); // 重新获取列表
     } catch {
       toast.error("删除失败");
     }
   };
 
   useEffect(() => {
-    fetchPosts();
+    fetchCategories();
   }, []);
 
   if (loading) {
@@ -98,20 +91,20 @@ export default function AdminPosts() {
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <div>
-          <h1 className="text-2xl font-bold">文章管理</h1>
+          <h1 className="text-2xl font-bold">分类管理</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            共 {pageInfo.total} 篇文章
+            共 {pageInfo.total} 个分类
           </p>
         </div>
-        <Button onClick={() => router.push("/admin/posts/edit")}>
+        <Button onClick={() => router.push("/admin/categories/edit")}>
           <Plus className="w-4 h-4 mr-2" />
-          新建文章
+          新建分类
         </Button>
       </div>
 
-      {posts.length === 0 ? (
+      {categories.length === 0 ? (
         <div className="text-center py-8 text-gray-500">
-          暂无文章，点击右上角按钮创建新文章
+          暂无分类，点击右上角按钮创建新分类
         </div>
       ) : (
         <>
@@ -121,76 +114,31 @@ export default function AdminPosts() {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[200px]">标题</TableHead>
-                    <TableHead className="w-[100px]">分类</TableHead>
-                    <TableHead className="w-[120px]">标签</TableHead>
-                    <TableHead className="w-[80px]">状态</TableHead>
-                    <TableHead className="w-[100px]">发布时间</TableHead>
-                    <TableHead className="w-[100px]">更新时间</TableHead>
-                    <TableHead className="w-[60px]">浏览</TableHead>
+                    <TableHead className="w-[100px]">Slug</TableHead>
                     <TableHead className="w-[120px] text-right">操作</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {posts.map(post => (
-                    <TableRow key={post._id}>
+                  {categories.map(category => (
+                    <TableRow key={category._id}>
                       <TableCell className="font-medium">
                         <div
                           className="truncate max-w-[280px]"
-                          title={post.title}
+                          title={category.title}
                         >
-                          {post.title}
+                          {category.title}
                         </div>
-                        {post.summary && (
-                          <div
-                            className="text-sm text-muted-foreground truncate"
-                            title={post.summary}
-                          >
-                            {post.summary}
-                          </div>
-                        )}
                       </TableCell>
-                      <TableCell>{post.category}</TableCell>
-                      <TableCell>
-                        {post.tags && post.tags.length > 0 ? (
-                          <div className="flex items-center gap-1">
-                            <Tag className="w-3 h-3" />
-                            <span className="text-sm">
-                              {post.tags.join(", ")}
-                            </span>
-                          </div>
-                        ) : (
-                          "-"
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <span
-                          className={`px-2 py-1 rounded text-sm ${
-                            post.status === "published"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-yellow-100 text-yellow-800"
-                          }`}
-                        >
-                          {post.status === "published" ? "已发布" : "草稿"}
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        {new Date(post.publishDate).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell>
-                        {new Date(post.updateDate).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell>{post.viewCount}</TableCell>
+                      <TableCell>{category.slug}</TableCell>
+
                       <TableCell className="text-right space-x-2">
-                        <Button variant="outline" size="icon" asChild>
-                          <Link href={`/posts/${post.slug}`} target="_blank">
-                            <Eye className="w-4 h-4" />
-                          </Link>
-                        </Button>
                         <Button
                           variant="outline"
                           size="icon"
                           onClick={() =>
-                            router.push(`/admin/posts/edit/${post._id!}`)
+                            router.push(
+                              `/admin/categories/edit/${category._id!}`
+                            )
                           }
                         >
                           <Edit className="w-4 h-4" />
@@ -198,7 +146,7 @@ export default function AdminPosts() {
                         <Button
                           variant="outline"
                           size="icon"
-                          onClick={() => handleDelete(post._id!)}
+                          onClick={() => handleDelete(category._id!)}
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
@@ -217,7 +165,7 @@ export default function AdminPosts() {
                   <PaginationItem>
                     <PaginationPrevious
                       href="#"
-                      onClick={() => fetchPosts(pageInfo.currentPage - 1)}
+                      onClick={() => fetchCategories(pageInfo.currentPage - 1)}
                       isActive={pageInfo.currentPage > 1}
                     />
                   </PaginationItem>
@@ -225,7 +173,7 @@ export default function AdminPosts() {
                     <PaginationItem key={i + 1}>
                       <PaginationLink
                         href="#"
-                        onClick={() => fetchPosts(i + 1)}
+                        onClick={() => fetchCategories(i + 1)}
                         isActive={pageInfo.currentPage === i + 1}
                       >
                         {i + 1}
@@ -235,7 +183,7 @@ export default function AdminPosts() {
                   <PaginationItem>
                     <PaginationNext
                       href="#"
-                      onClick={() => fetchPosts(pageInfo.currentPage + 1)}
+                      onClick={() => fetchCategories(pageInfo.currentPage + 1)}
                       isActive={pageInfo.currentPage < pageInfo.totalPages}
                     />
                   </PaginationItem>

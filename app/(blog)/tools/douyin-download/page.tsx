@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { showToast } from "@/libs/utils";
+import { showToast } from "~/lib/utils";
 import axios, { AxiosError } from "axios";
 import Image from "next/image";
 import { saveAs } from "file-saver";

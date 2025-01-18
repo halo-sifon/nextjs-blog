@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import axiosInstance from "~/libs/request";
+import axiosInstance from "~/lib/request";
 import { Button, Input } from "~/components/ui";
 import { ResponseProps } from "~/models/Response";
 

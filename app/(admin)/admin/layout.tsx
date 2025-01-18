@@ -1,18 +1,19 @@
 "use client";
 
-import { cn, showToast } from "@/libs/utils";
+import { cn, showToast } from "~/lib/utils";
 import {
   BarChart2,
   FileText,
   LayoutDashboard,
   LogOut,
   Settings,
-  Video
+  Tag,
+  Video,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "~/components/ui";
-import axiosInstance from "~/libs/request";
+import axiosInstance from "~/lib/request";
 
 const sidebarItems = [
   {
@@ -24,6 +25,11 @@ const sidebarItems = [
     title: "文章管理",
     href: "/admin/posts",
     icon: FileText,
+  },
+  {
+    title: "文章分类",
+    href: "/admin/categories",
+    icon: Tag,
   },
   {
     title: "数据统计",

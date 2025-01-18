@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "~/lib/mongodb";
-import { Post } from "~/models/Post";
+import { Category } from "~/models/Category";
 import { validateToken } from "~/middleware/auth";
 import { FailResponse, ListResponse, SuccessResponse } from "~/models/Response";
 import { HttpStatusCode } from "axios";
 
 /**
- * 获取文章列表
+ * 获取分类列表
  *
- * @route GET /api/posts
+ * @route GET /api/categories
  * @access Public - 已发布文章对所有人可见，草稿需要登录
  *
  * @query {number} [page=1] - 页码
@@ -21,9 +21,6 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const page = parseInt(searchParams.get("page") || "1");
   const limit = parseInt(searchParams.get("limit") || "10");
-  const search = searchParams.get("search");
-  const category = searchParams.get("category");
-  const status = searchParams.get("status");
 
   try {
     await connectDB();
@@ -37,29 +34,20 @@ export async function GET(request: NextRequest) {
 
     // 构建查询条件
     const query: any = {};
-    if (search) {
-      query.$text = { $search: search };
-    }
-    if (category) {
-      query.category = category;
-    }
-    if (status) {
-      query.status = status;
-    }
+
     // 计算总数和分页
-    const total = await Post.countDocuments(query);
-    const posts = await Post.find(query)
-      .sort({ publishDate: -1 })
+    const total = await Category.countDocuments(query);
+    const categories = await Category.find(query)
+      .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
-      .limit(limit)
-      .select("-content"); // 列表不返回完整内容
+      .limit(limit);
 
     const hasMore = total > page * limit;
 
     return NextResponse.json(
       new ListResponse({
         data: {
-          list: posts,
+          list: categories,
           total,
           hasMore,
           currentPage: page,
@@ -68,9 +56,9 @@ export async function GET(request: NextRequest) {
       })
     );
   } catch (error) {
-    console.error("Error fetching posts:", error);
+    console.error("Error fetching categories:", error);
     return NextResponse.json(
-      new FailResponse({ message: "获取文章列表失败" }),
+      new FailResponse({ message: "获取分类列表失败" }),
       {
         status: 500,
       }
@@ -79,19 +67,14 @@ export async function GET(request: NextRequest) {
 }
 
 /**
- * 创建新文章
+ * 创建新分类
  *
- * @route POST /api/posts
+ * @route POST /api/categories
  * @access Private - 需要登录
  *
- * @body {object} post - 文章信息
- * @body {string} post.title - 标题
- * @body {string} post.content - 内容（Markdown格式）
- * @body {string} post.category - 分类
- * @body {string} [post.summary] - 摘要
- * @body {string[]} [post.tags] - 标签数组
- * @body {string} post.status - 状态（draft/published）
- * @body {string} post.slug - URL友好的标识符
+ * @body {object} category - 分类信息
+ * @body {string} category.title - 标题
+ * @body {string} category.slug - 分类Slug
  *
  */
 export async function POST(request: NextRequest) {
@@ -106,42 +89,34 @@ export async function POST(request: NextRequest) {
     await connectDB();
     const body = await request.json();
 
-    // 创建新文章
-    const post = new Post({
+    // 创建新分类
+    const category = new Category({
       ...body,
-      author: authResult.data.id, // 添加默认值
-      publishDate: new Date(),
-      updateDate: new Date(),
     });
 
-    await post.save();
+    await category.save();
 
-    return NextResponse.json(new SuccessResponse({ data: post }), {
+    return NextResponse.json(new SuccessResponse({ data: category }), {
       status: 200,
     });
   } catch (error) {
-    console.error("Error creating post:", error);
-    return NextResponse.json(new FailResponse({ message: "创建文章失败" }), {
+    console.error("Error creating category:", error);
+    return NextResponse.json(new FailResponse({ message: "创建分类失败" }), {
       status: 500,
     });
   }
 }
 
 /**
- * 更新文章
+ * 更新分类
  *
- * @route PUT /api/posts
+ * @route PUT /api/categories
  * @access Private - 需要登录
  *
- * @body {object} post - 文章信息
- * @body {string} post.id - 文章ID
- * @body {string} [post.title] - 标题
- * @body {string} [post.content] - 内容（Markdown格式）
- * @body {string} [post.category] - 分类
- * @body {string} [post.summary] - 摘要
- * @body {string[]} [post.tags] - 标签数组
- * @body {string} [post.status] - 状态（draft/published）
- * @body {string} [post.slug] - URL友好的标识符
+ * @body {object} category - 分类信息
+ * @body {string} category.id - 分类ID
+ * @body {string} [category.title] - 标题
+ * @body {string} [category.slug] - 分类Slug
  */
 export async function PUT(request: NextRequest) {
   const authResult = await validateToken();
@@ -158,14 +133,14 @@ export async function PUT(request: NextRequest) {
 
     if (!id) {
       return NextResponse.json(
-        new FailResponse({ message: "文章ID是必需的" }),
+        new FailResponse({ message: "分类ID是必需的" }),
         {
           status: HttpStatusCode.BadRequest,
         }
       );
     }
 
-    const post = await Post.findByIdAndUpdate(
+    const category = await Category.findByIdAndUpdate(
       id,
       {
         ...updateData,
@@ -174,25 +149,25 @@ export async function PUT(request: NextRequest) {
       { new: true, runValidators: true }
     );
 
-    if (!post) {
-      return NextResponse.json(new FailResponse({ message: "文章不存在" }), {
+    if (!category) {
+      return NextResponse.json(new FailResponse({ message: "分类不存在" }), {
         status: HttpStatusCode.BadRequest,
       });
     }
 
-    return NextResponse.json(new SuccessResponse({ data: post }));
+    return NextResponse.json(new SuccessResponse({ data: category }));
   } catch (error) {
-    console.error("更新文章失败:", error);
-    return NextResponse.json(new FailResponse({ message: "更新文章失败" }), {
+    console.error("更新分类失败:", error);
+    return NextResponse.json(new FailResponse({ message: "更新分类失败" }), {
       status: HttpStatusCode.InternalServerError,
     });
   }
 }
 
 /**
- * 删除文章
+ * 删除分类
  *
- * @route DELETE /api/posts?id={id}
+ * @route DELETE /api/categories/{id}
  * @access Private - 需要登录
  */
 export async function DELETE(request: NextRequest) {
@@ -209,25 +184,25 @@ export async function DELETE(request: NextRequest) {
 
     if (!id) {
       return NextResponse.json(
-        new FailResponse({ message: "文章ID是必需的" }),
+        new FailResponse({ message: "分类ID是必需的" }),
         {
           status: HttpStatusCode.BadRequest,
         }
       );
     }
 
-    const post = await Post.findByIdAndDelete(id);
+    const category = await Category.findByIdAndDelete(id);
 
-    if (!post) {
-      return NextResponse.json(new FailResponse({ message: "文章不存在" }), {
+    if (!category) {
+      return NextResponse.json(new FailResponse({ message: "分类不存在" }), {
         status: HttpStatusCode.BadRequest,
       });
     }
 
-    return NextResponse.json(new SuccessResponse({ message: "文章删除成功" }));
+    return NextResponse.json(new SuccessResponse({ message: "分类删除成功" }));
   } catch (error) {
-    console.error("删除文章失败:", error);
-    return NextResponse.json(new FailResponse({ message: "删除文章失败" }), {
+    console.error("删除分类失败:", error);
+    return NextResponse.json(new FailResponse({ message: "删除分类失败" }), {
       status: HttpStatusCode.InternalServerError,
     });
   }

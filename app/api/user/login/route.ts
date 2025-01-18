@@ -3,7 +3,7 @@ import { Admin } from "~/models/Admin";
 import { FailResponse, SuccessResponse } from "~/models/Response";
 import { HttpStatusCode } from "axios";
 import { SignJWT } from "jose";
-import { connectDB } from "~/libs/mongodb";
+import { connectDB } from "~/lib/mongodb";
 import { Types } from "mongoose";
 
 export async function POST(request: NextRequest) {

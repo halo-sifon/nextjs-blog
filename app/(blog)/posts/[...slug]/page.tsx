@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import ScrollToTop from "~/components/scroll-to-top";
 import PostContent from "./post-content";
 import { Post } from "~/models/Post";
-import { connectDB } from "~/libs/mongodb";
+import { connectDB } from "~/lib/mongodb";
 
 const md = new MarkdownIt({
   html: true,

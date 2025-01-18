@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Textarea } from "~/components/ui/textarea";
-import axiosInstance from "~/libs/request";
+import axiosInstance from "~/lib/request";
 import { IPost } from "~/models/Post";
 
 // 初始化 markdown-it

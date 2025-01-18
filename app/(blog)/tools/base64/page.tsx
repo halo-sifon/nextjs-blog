@@ -1,6 +1,6 @@
 "use client";
 
-import { showToast } from "@/libs/utils";
+import { showToast } from "~/lib/utils";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 

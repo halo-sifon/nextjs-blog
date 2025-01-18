@@ -11,3 +11,11 @@ export const showToast = {
   error: (message: string) => toast.error(message),
   info: (message: string) => toast.info(message),
 };
+
+export function formatDate(date: string | Date) {
+  return new Date(date).toLocaleDateString("zh-CN", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}

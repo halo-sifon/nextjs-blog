@@ -5,7 +5,7 @@ import imageCompression from "browser-image-compression";
 import Image from "next/image";
 import JSZip from "jszip";
 import ImagePreview from "~/components/image-preview";
-import { showToast } from "@/libs/utils";
+import { showToast } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 
