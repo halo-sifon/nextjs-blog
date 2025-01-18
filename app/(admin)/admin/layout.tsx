@@ -66,57 +66,53 @@ export default function AdminLayout({
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="flex h-screen">
-        {/* 侧边栏 */}
-        <aside className="w-64 border-r bg-card">
-          <div className="flex h-full flex-col">
-            {/* Logo */}
-            <div className="flex h-14 items-center border-b px-4">
-              <span className="text-lg font-semibold">管理后台</span>
-            </div>
+    <div className="h-screen bg-background">
+      {/* 侧边栏 */}
+      <aside className="fixed left-0 top-0 h-screen w-64 border-r bg-card grid grid-rows-[56px_1fr_auto]">
+        {/* Logo */}
+        <div className="border-b px-4 grid place-items-center">
+          <span className="text-lg font-semibold">管理后台</span>
+        </div>
 
-            {/* 导航菜单 */}
-            <nav className="flex-1 space-y-1 px-2 py-4">
-              {sidebarItems.map(item => {
-                const isActive = pathname === item.href;
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                      isActive
-                        ? "bg-primary text-primary-foreground"
-                        : "hover:bg-muted"
-                    )}
-                  >
-                    <item.icon className="h-4 w-4" />
-                    {item.title}
-                  </Link>
-                );
-              })}
-            </nav>
-
-            {/* 底部操作区 */}
-            <div className="border-t p-4">
-              <Button
-                onClick={onLogout}
-                variant="outline"
-                className="hover:bg-red-500 hover:text-white"
+        {/* 导航菜单 */}
+        <nav className="space-y-1 px-2 py-4 overflow-y-auto">
+          {sidebarItems.map(item => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "grid grid-cols-[20px_1fr] gap-3 items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-muted"
+                )}
               >
-                <LogOut className="h-4 w-4" />
-                退出登录
-              </Button>
-            </div>
-          </div>
-        </aside>
+                <item.icon className="h-4 w-4" />
+                {item.title}
+              </Link>
+            );
+          })}
+        </nav>
 
-        {/* 主内容区 */}
-        <main className="flex-1 overflow-y-auto">
-          <div className="container p-4">{children}</div>
-        </main>
-      </div>
+        {/* 底部操作区 */}
+        <div className="border-t p-4">
+          <Button
+            onClick={onLogout}
+            variant="outline"
+            className="hover:bg-red-500 hover:text-white grid grid-cols-[20px_1fr] gap-2 items-center"
+          >
+            <LogOut className="h-4 w-4" />
+            退出登录
+          </Button>
+        </div>
+      </aside>
+
+      {/* 主内容区 */}
+      <main className="ml-64 min-h-screen">
+        <div className="p-4">{children}</div>
+      </main>
     </div>
   );
 }

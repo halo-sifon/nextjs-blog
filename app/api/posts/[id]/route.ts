@@ -16,11 +16,14 @@ import { HttpStatusCode } from "axios";
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const params = await context.params;
+    const { id } = params;
+    
     await connectDB();
-    const post = await Post.findById(params.id);
+    const post = await Post.findById(id);
 
     if (!post) {
       return NextResponse.json(new FailResponse({ message: "文章不存在" }), {

@@ -32,7 +32,6 @@ const CategorySchema = new mongoose.Schema<ICategory>(
 
 // 添加索引以提高查询性能
 CategorySchema.index({ title: "text", slug: "text" });
-CategorySchema.index({ slug: 1 });
 
 // 导出 Category 模型
 export const Category: Model<ICategory> =

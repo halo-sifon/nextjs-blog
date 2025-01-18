@@ -7,6 +7,7 @@ import highlightjs from "markdown-it-highlightjs";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Loading } from "~/components/ui";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -20,6 +21,7 @@ import {
 import { Textarea } from "~/components/ui/textarea";
 import axiosInstance from "~/lib/request";
 import { IPost } from "~/models/Post";
+import { ICategory } from "~/models/Category";
 
 // 初始化 markdown-it
 const md = new MarkdownIt({
@@ -37,6 +39,7 @@ export default function EditPost({ params }: PageProps) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [preview, setPreview] = useState("");
+  const [categories, setCategories] = useState<ICategory[]>([]);
   const [post, setPost] = useState<IPost>({
     title: "",
     content: "",
@@ -44,7 +47,6 @@ export default function EditPost({ params }: PageProps) {
     summary: "",
     tags: [],
     status: "draft",
-    slug: "",
     author: "",
     publishDate: new Date(),
     updateDate: new Date(),
@@ -53,6 +55,25 @@ export default function EditPost({ params }: PageProps) {
 
   const resolvedParams = use(params);
   const postId = resolvedParams.id?.[0]; // 获取可选的文章 ID
+
+  // 获取分类列表
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await axiosInstance.get<ICategory[]>(
+          "/categories/list"
+        );
+        if (data) {
+          setCategories(data);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        toast.error("获取分类列表失败");
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   // 更新预览
   useEffect(() => {
@@ -119,11 +140,17 @@ export default function EditPost({ params }: PageProps) {
   };
 
   if (loading) {
-    return <div className="p-4">加载中...</div>;
+    return (
+      <div className="flex justify-center items-center">
+        <Loading />
+      </div>
+    );
   }
-
   return (
-    <form onSubmit={handleSubmit} className="p-4 space-y-4 max-w-4xl mx-auto">
+    <form
+      onSubmit={handleSubmit}
+      className="p-4 space-y-4 max-w-4xl mx-auto overflow-y-scroll"
+    >
       <h1 className="text-2xl font-bold mb-6">
         {postId ? "编辑文章" : "新建文章"}
       </h1>
@@ -135,27 +162,27 @@ export default function EditPost({ params }: PageProps) {
           value={post.title}
           onChange={e => setPost({ ...post, title: e.target.value })}
           required
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="slug">Slug</Label>
-        <Input
-          id="slug"
-          value={post.slug}
-          onChange={e => setPost({ ...post, slug: e.target.value })}
-          required
+          placeholder="请输入文章标题"
         />
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="category">分类</Label>
-        <Input
-          id="category"
+        <Select
           value={post.category}
-          onChange={e => setPost({ ...post, category: e.target.value })}
-          required
-        />
+          onValueChange={value => setPost({ ...post, category: value })}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="请选择文章分类" />
+          </SelectTrigger>
+          <SelectContent>
+            {categories.map(category => (
+              <SelectItem key={category._id} value={category.slug}>
+                {category.title}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-2">
@@ -165,6 +192,7 @@ export default function EditPost({ params }: PageProps) {
           value={post.summary}
           onChange={e => setPost({ ...post, summary: e.target.value })}
           rows={3}
+          placeholder="请输入文章摘要（选填）"
         />
       </div>
 
@@ -179,7 +207,7 @@ export default function EditPost({ params }: PageProps) {
               onChange={e => setPost({ ...post, content: e.target.value })}
               rows={20}
               required
-              placeholder="支持 Markdown 格式"
+              placeholder="请输入文章内容（支持 Markdown 格式）"
               className="font-mono h-[600px]"
             />
           </div>
@@ -222,6 +250,7 @@ export default function EditPost({ params }: PageProps) {
               tags: e.target.value.split(",").map(t => t.trim()),
             })
           }
+          placeholder="请输入标签，多个标签用英文逗号分隔（选填）"
         />
       </div>
 
@@ -233,11 +262,13 @@ export default function EditPost({ params }: PageProps) {
         >
           取消
         </Button>
-        {post.slug && (
+        {post.category && (
           <Button
             type="button"
             variant="outline"
-            onClick={() => window.open(`/posts/${post.slug}`, "_blank")}
+            onClick={() =>
+              window.open(`/posts/${post.category}/${post.title}`, "_blank")
+            }
           >
             预览
           </Button>

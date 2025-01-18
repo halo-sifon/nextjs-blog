@@ -182,7 +182,10 @@ export default function AdminPosts() {
                       <TableCell>{post.viewCount}</TableCell>
                       <TableCell className="text-right space-x-2">
                         <Button variant="outline" size="icon" asChild>
-                          <Link href={`/posts/${post.slug}`} target="_blank">
+                          <Link
+                            href={`/posts/${post.category}/${post.title}`}
+                            target="_blank"
+                          >
                             <Eye className="w-4 h-4" />
                           </Link>
                         </Button>

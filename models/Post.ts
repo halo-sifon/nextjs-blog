@@ -13,7 +13,6 @@ export interface IPost {
   status: "draft" | "published"; // 状态：草稿或已发布
   viewCount: number; // 浏览次数
   author: string; // 作者
-  slug: string; // URL 友好的标识符
 }
 
 // 创建 Schema
@@ -68,13 +67,6 @@ const PostSchema = new mongoose.Schema<IPost>(
       required: [true, "作者是必需的"],
       trim: true,
     },
-    slug: {
-      type: String,
-      required: [true, "Slug是必需的"],
-      trim: true,
-      lowercase: true,
-      index: { unique: true },
-    },
   },
   {
     timestamps: true, // 自动管理 createdAt 和 updatedAt
@@ -85,8 +77,7 @@ const PostSchema = new mongoose.Schema<IPost>(
 
 // 添加索引以提高查询性能
 PostSchema.index({ title: "text", content: "text" });
-PostSchema.index({ category: 1 });
-PostSchema.index({ publishDate: -1 });
+PostSchema.index({ category: 1, title: 1 }, { unique: true });
 
 // 导出 Post 模型
 export const Post: Model<IPost> =
