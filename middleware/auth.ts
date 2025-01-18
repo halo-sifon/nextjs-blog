@@ -1,4 +1,4 @@
-import { verifyToken } from "~/lib/jwt";
+import { verifyToken } from "@/lib/jwt";
 import { cookies } from "next/headers";
 
 export async function validateToken() {

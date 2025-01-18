@@ -1,6 +1,6 @@
 "use client";
 
-import { cn, showToast } from "~/lib/utils";
+import { cn, showToast } from "@/lib/utils";
 import {
   BarChart2,
   FileText,
@@ -12,8 +12,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Button } from "~/components/ui";
-import axiosInstance from "~/lib/request";
+import { Button } from "@/components/ui";
+import axiosInstance from "@/lib/request";
 
 const sidebarItems = [
   {

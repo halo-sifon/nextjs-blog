@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { SuccessResponse } from "~/models/Response";
+import { SuccessResponse } from "@/models/Response";
 
 export async function POST() {
   // 创建响应对象

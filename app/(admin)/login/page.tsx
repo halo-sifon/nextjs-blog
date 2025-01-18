@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import axiosInstance from "~/lib/request";
-import { Button, Input } from "~/components/ui";
-import { ResponseProps } from "~/models/Response";
+import axiosInstance from "@/lib/request";
+import { Button, Input } from "@/components/ui";
+import { ResponseProps } from "@/models/Response";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");

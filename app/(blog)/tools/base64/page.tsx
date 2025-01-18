@@ -1,8 +1,8 @@
 "use client";
 
-import { showToast } from "~/lib/utils";
+import { showToast } from "@/lib/utils";
 import { useState } from "react";
-import { Button } from "~/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 export default function Base64Page() {
   const [textInput, setTextInput] = useState("");

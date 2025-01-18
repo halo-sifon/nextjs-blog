@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Noto_Sans_SC, Noto_Serif_SC } from "next/font/google";
 import { Toaster } from "sonner";
-import ProgressBar from "~/components/progress-bar";
-import { ThemeProvider } from "~/providers/theme-provider";
+import ProgressBar from "@/components/progress-bar";
+import { ThemeProvider } from "@/providers/theme-provider";
 import "./globals.css";
 
 const notoSerifSC = Noto_Serif_SC({

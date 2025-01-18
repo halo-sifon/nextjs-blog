@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import ThemeSwitch from "~/components/theme-switch";
+import ThemeSwitch from "@/components/theme-switch";
 import { useState, useRef, useEffect } from "react";
 
 // 下拉菜单项接口定义

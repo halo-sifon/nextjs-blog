@@ -1,4 +1,4 @@
-import { cn } from "~/lib/utils";
+import { cn } from "@/lib/utils";
 
 interface TagProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: "default" | "secondary" | "outline";

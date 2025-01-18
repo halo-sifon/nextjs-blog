@@ -1,8 +1,8 @@
-import { Post } from "~/models/Post";
+import { Post } from "@/models/Post";
 import Link from "next/link";
-import { formatDate } from "~/lib/utils";
+import { formatDate } from "@/lib/utils";
 import { Tag } from "@/components/ui/tag";
-import { connectDB } from "~/lib/mongodb";
+import { connectDB } from "@/lib/mongodb";
 
 // 服务端数据获取函数
 async function getPosts() {

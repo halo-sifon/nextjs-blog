@@ -124,3 +124,9 @@
     - 保持数据一致性
     - 提升用户体验
     - 防止误操作导致的数据问题 
+
+## 2024-03-19
+- 修复: 将 API 路由中的 `~` 路径别名改为 `@` 路径别名，以解决 Vercel 部署时的路径解析问题
+  - 修改文件：
+    - `app/api/user/login/route.ts`
+    - `app/api/user/register/route.ts` 

@@ -5,11 +5,11 @@ import "highlight.js/styles/github.css";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import axiosInstance from "~/lib/request";
-import { ICategory } from "~/models/Category";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import axiosInstance from "@/lib/request";
+import { ICategory } from "@/models/Category";
 
 interface PageProps {
   params: Promise<{ id?: string[] }>;

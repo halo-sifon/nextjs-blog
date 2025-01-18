@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { ResponseProps } from "~/models/Response";
+import { ResponseProps } from "@/models/Response";
 import { showToast } from "./utils";
 
 // 扩展 AxiosRequestConfig 类型

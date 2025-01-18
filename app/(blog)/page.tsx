@@ -7,8 +7,8 @@ import {
   ImageCompressIcon,
   PDFIcon,
   XIcon,
-} from "~/components/icon";
-import { Input } from "~/components/ui";
+} from "@/components/icon";
+import { Input } from "@/components/ui";
 import { Search, Code, Package, MessageCircle } from "lucide-react";
 
 type ColorType = "blue" | "gray" | "pink" | "red" | "orange" | "purple";

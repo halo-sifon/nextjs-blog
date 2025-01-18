@@ -7,21 +7,21 @@ import highlightjs from "markdown-it-highlightjs";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Loading } from "~/components/ui";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
+import { Loading } from "@/components/ui";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "~/components/ui/select";
-import { Textarea } from "~/components/ui/textarea";
-import axiosInstance from "~/lib/request";
-import { IPost } from "~/models/Post";
-import { ICategory } from "~/models/Category";
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import axiosInstance from "@/lib/request";
+import { IPost } from "@/models/Post";
+import { ICategory } from "@/models/Category";
 
 // 初始化 markdown-it
 const md = new MarkdownIt({

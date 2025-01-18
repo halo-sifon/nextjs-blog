@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Button } from "~/components/ui/button";
-import { Loading } from "~/components/ui/loading";
+import { Button } from "@/components/ui/button";
+import { Loading } from "@/components/ui/loading";
 import {
   Pagination,
   PaginationContent,
@@ -14,7 +14,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "~/components/ui/pagination";
+} from "@/components/ui/pagination";
 import {
   Table,
   TableBody,
@@ -22,11 +22,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "~/components/ui/table";
-import { ConfirmDeleteDialog } from "~/components/ui/confirm-delete-dialog";
-import axiosInstance from "~/lib/request";
-import { IPost } from "~/models/Post";
-import { PaginationResponse } from "~/types/api";
+} from "@/components/ui/table";
+import { ConfirmDeleteDialog } from "@/components/ui/confirm-delete-dialog";
+import axiosInstance from "@/lib/request";
+import { IPost } from "@/models/Post";
+import { PaginationResponse } from "@/types/api";
 
 export default function AdminPosts() {
   const [posts, setPosts] = useState<IPost[]>([]);

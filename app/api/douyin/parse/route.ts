@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
-import { FailResponse, SuccessResponse } from "~/models/Response";
+import { FailResponse, SuccessResponse } from "@/models/Response";
 
 const headers = {
   "User-Agent":

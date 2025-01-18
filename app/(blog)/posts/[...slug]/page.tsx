@@ -3,10 +3,10 @@ import MarkdownIt from "markdown-it";
 import highlightjs from "markdown-it-highlightjs";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import ScrollToTop from "~/components/scroll-to-top";
+import ScrollToTop from "@/components/scroll-to-top";
 import PostContent from "./post-content";
-import { Post } from "~/models/Post";
-import { connectDB } from "~/lib/mongodb";
+import { Post } from "@/models/Post";
+import { connectDB } from "@/lib/mongodb";
 import { Tag, Tags } from "lucide-react";
 
 const md = new MarkdownIt({

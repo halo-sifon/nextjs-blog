@@ -1,8 +1,8 @@
-import { Admin } from "~/models/Admin";
+import { Admin } from "@/models/Admin";
 import { HttpStatusCode } from "axios";
 import { NextRequest, NextResponse } from "next/server";
-import { connectDB } from "~/lib/mongodb";
-import { FailResponse, SuccessResponse } from "~/models/Response";
+import { connectDB } from "@/lib/mongodb";
+import { FailResponse, SuccessResponse } from "@/models/Response";
 
 export async function POST(request: NextRequest) {
   try {

@@ -4,10 +4,10 @@ import { useState, useRef, useCallback } from "react";
 import imageCompression from "browser-image-compression";
 import Image from "next/image";
 import JSZip from "jszip";
-import ImagePreview from "~/components/image-preview";
-import { showToast } from "~/lib/utils";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
+import ImagePreview from "@/components/image-preview";
+import { showToast } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface CompressedImage {
   file: File;

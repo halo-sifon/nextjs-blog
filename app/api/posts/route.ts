@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectDB } from "~/lib/mongodb";
-import { Post } from "~/models/Post";
-import { validateToken } from "~/middleware/auth";
-import { FailResponse, ListResponse, SuccessResponse } from "~/models/Response";
+import { connectDB } from "@/lib/mongodb";
+import { Post } from "@/models/Post";
+import { validateToken } from "@/middleware/auth";
+import { FailResponse, ListResponse, SuccessResponse } from "@/models/Response";
 import { HttpStatusCode } from "axios";
 
 /**
