@@ -3,6 +3,7 @@ import MarkdownIt from "markdown-it";
 import highlightjs from "markdown-it-highlightjs";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
 import ScrollToTop from "@/components/scroll-to-top";
 import PostContent from "./post-content";
 import { Post } from "@/models/Post";
@@ -16,11 +17,7 @@ const md = new MarkdownIt({
   typographer: true,
 }).use(highlightjs);
 
-export default async function PostPage(props: {
-  params: Promise<{ slug: string[] }>;
-}) {
-  const params = await props.params;
-
+async function getPost(params: { slug: string[] }) {
   const [category, title] = params.slug.map(slug => decodeURIComponent(slug));
 
   // 连接数据库并获取文章
@@ -30,6 +27,52 @@ export default async function PostPage(props: {
     model: Category,
     select: "title slug",
   });
+  return post;
+}
+
+// 生成动态 metadata
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string[] }>;
+}): Promise<Metadata> {
+  const [category, title] = (await params).slug.map(slug =>
+    decodeURIComponent(slug)
+  );
+
+  // 连接数据库并获取文章
+  await connectDB();
+  const post = await Post.findOne({ category, title }).populate({
+    path: "category",
+    model: Category,
+    select: "title slug",
+  });
+
+  if (!post) {
+    return {
+      title: "文章不存在",
+      description: "抱歉，您访问的文章不存在。",
+    };
+  }
+
+  // 提取文章的前 150 个字符作为描述
+  const plainText = post.content.replace(/[#*`]/g, "").replace(/\n/g, " ");
+  const description =
+    plainText.length > 150 ? plainText.slice(0, 150) + "..." : plainText;
+
+  return {
+    title: post.title,
+    description: post.summary || description,
+    keywords: post.tags,
+    authors: [{ name: "Sifon", url: "https://github.com/halo-sifon" }],
+  };
+}
+
+export default async function PostPage(props: {
+  params: Promise<{ slug: string[] }>;
+}) {
+  const params = await props.params;
+  const post = await getPost(params);
 
   if (!post) {
     return notFound();
