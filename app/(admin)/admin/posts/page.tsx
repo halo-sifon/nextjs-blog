@@ -1,6 +1,6 @@
 "use client";
 
-import { Edit, Eye, Plus, Tag, Trash2 } from "lucide-react";
+import { Edit, Eye, Plus, Tag } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -23,6 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { ConfirmDeleteDialog } from "~/components/ui/confirm-delete-dialog";
 import axiosInstance from "~/lib/request";
 import { IPost } from "~/models/Post";
 import { PaginationResponse } from "~/types/api";
@@ -62,8 +63,6 @@ export default function AdminPosts() {
 
   // 删除文章
   const handleDelete = async (id: string) => {
-    if (!confirm("确定要删除这篇文章吗？")) return;
-
     try {
       const res = await fetch(`/api/posts?id=${id}`, {
         method: "DELETE",
@@ -198,13 +197,11 @@ export default function AdminPosts() {
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => handleDelete(post._id!)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                        <ConfirmDeleteDialog
+                          title="确认删除"
+                          description={`确定要删除文章 "${post.title}" 吗？此操作不可恢复。`}
+                          onConfirm={() => handleDelete(post._id!)}
+                        />
                       </TableCell>
                     </TableRow>
                   ))}

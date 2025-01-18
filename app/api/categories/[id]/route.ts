@@ -13,7 +13,7 @@ import { FailResponse, SuccessResponse } from "~/models/Response";
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
@@ -24,7 +24,7 @@ export async function GET(
       });
     }
 
-    const category = await Category.findById(params.id);
+    const category = await Category.findById((await params).id);
 
     if (!category) {
       return NextResponse.json(new FailResponse({ message: "分类不存在" }), {
