@@ -204,7 +204,7 @@ export default function DouyinDownload() {
 
       {/* 视频信息展示 */}
       {videoInfo && (
-        <Card className="p-3 md:p-4 space-y-3 md:space-y-4">
+        <Card className="p-3 md:p-4 space-y-3 md:space-y-4 mt-4">
           <div className="space-y-3 md:space-y-4">
             <div className="space-y-2">
               <h2 className="text-lg md:text-xl font-semibold break-all">
