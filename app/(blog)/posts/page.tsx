@@ -96,7 +96,7 @@ export default async function PostsPage({
               href="/posts"
               className="text-primary hover:underline mt-2 inline-block"
             >
-              <Button>查看全部文章</Button>
+              <Button>查看近期文章</Button>
             </Link>
           </div>
         )}
@@ -111,7 +111,7 @@ export default async function PostsPage({
             !category ? "bg-accent" : ""
           }`}
         >
-          全部文章
+          近期文章
         </Link>
         {categories.map(item => (
           <Link
