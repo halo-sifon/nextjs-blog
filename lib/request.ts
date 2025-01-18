@@ -12,7 +12,7 @@ declare module "axios" {
 // 创建一个 axios 实例
 const axiosInstance = axios.create({
   baseURL: "/api",
-  timeout: 5000, // 设置请求超时时间
+  timeout: 60000, // 设置请求超时时间
 });
 
 // 请求拦截器
@@ -39,13 +39,13 @@ axiosInstance.interceptors.response.use(
     // 获取请求配置
     const config = error.config;
 
-    // 如果设置了跳过错误处理，直接返回错误
-    if (config?.skipErrorHandle) {
-      return Promise.reject(error.response?.data);
-    }
-
     // 统一处理错误
     if (error.response) {
+      // 如果设置了跳过错误处理，直接返回错误
+      if (config?.skipErrorHandle) {
+        return Promise.reject(error.response?.data);
+      }
+
       // 服务器返回的错误
       if (error.response?.data.showType === "error") {
         showToast.error(error.response?.data.message);
@@ -55,6 +55,9 @@ axiosInstance.interceptors.response.use(
       }
       return Promise.reject(error.response.data);
     } else if (error.request) {
+      if (error.code === "ECONNABORTED") {
+        showToast.error(error.message || "请求超时");
+      }
       // 请求未收到响应
       console.error("Error Request:", error.request);
     } else {
