@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/mongodb";
 import { PostItem } from "./post-item";
 import Link from "next/link";
 import { Button } from "@/components/ui";
+import { CategorySelect } from "./category-select";
 
 // 获取所有分类及其文章数量
 async function getCategories() {
@@ -18,10 +19,13 @@ async function getCategories() {
           category: category._id,
           status: "published",
         });
-        return {
-          ...category.toObject(),
+        // 将 Mongoose 文档转换为普通对象，并只选择需要的字段
+        const plainCategory = {
+          _id: category._id.toString(),
+          title: category.title,
           count,
         };
+        return plainCategory;
       })
     );
 
@@ -72,63 +76,68 @@ export default async function PostsPage({
   ]);
 
   return (
-    <div className="flex gap-8">
-      {/* 文章列表 */}
-      <div className="flex-1 space-y-4">
-        {posts.length > 0 ? (
-          posts.map(post => (
-            <PostItem
-              key={post._id.toString()}
-              post={{
-                id: post._id.toString(),
-                title: post.title,
-                category: (post.category as ICategory).title,
-                slug: (post.category as ICategory)._id?.toString() as string,
-                publishDate: post.publishDate.toISOString(),
-                tags: post.tags,
-              }}
-            />
-          ))
-        ) : (
-          <div className="text-center py-12 text-muted-foreground">
-            <p>这个分类下还没有文章</p>
-            <Link
-              href="/posts"
-              className="text-primary hover:underline mt-2 inline-block"
-            >
-              <Button>查看近期文章</Button>
-            </Link>
-          </div>
-        )}
-      </div>
+    <div className="space-y-6">
+      {/* 分类选择器 - 在手机端显示为下拉菜单 */}
+      <CategorySelect categories={categories} currentCategory={category} />
 
-      {/* 分类列表 */}
-      <div className="w-48 space-y-2">
-        <h2 className="text-lg font-semibold mb-4">分类</h2>
-        <Link
-          href="/posts"
-          className={`block px-3 py-2 rounded-lg hover:bg-accent ${
-            !category ? "bg-accent" : ""
-          }`}
-        >
-          近期文章
-        </Link>
-        {categories.map(item => (
+      <div className="flex flex-col md:flex-row md:gap-8">
+        {/* 文章列表 */}
+        <div className="flex-1 space-y-4">
+          {posts.length > 0 ? (
+            posts.map(post => (
+              <PostItem
+                key={post._id.toString()}
+                post={{
+                  id: post._id.toString(),
+                  title: post.title,
+                  category: (post.category as ICategory).title,
+                  slug: (post.category as ICategory)._id?.toString() as string,
+                  publishDate: post.publishDate.toISOString(),
+                  tags: post.tags,
+                }}
+              />
+            ))
+          ) : (
+            <div className="text-center py-12 text-muted-foreground">
+              <p>这个分类下还没有文章</p>
+              <Link
+                href="/posts"
+                className="text-primary hover:underline mt-2 inline-block"
+              >
+                <Button>查看近期文章</Button>
+              </Link>
+            </div>
+          )}
+        </div>
+
+        {/* 分类列表 - 在桌面端显示为侧边栏 */}
+        <div className="hidden md:block w-48 space-y-2">
+          <h2 className="text-lg font-semibold mb-4">分类</h2>
           <Link
-            key={item._id.toString()}
-            href={`/posts?category=${item._id}`}
+            href="/posts"
             className={`block px-3 py-2 rounded-lg hover:bg-accent ${
-              category === item._id?.toString() ? "bg-accent" : ""
+              !category ? "bg-accent" : ""
             }`}
           >
-            <div className="flex justify-between items-center">
-              <span>{item.title}</span>
-              <span className="text-sm text-muted-foreground">
-                ({item.count})
-              </span>
-            </div>
+            近期文章
           </Link>
-        ))}
+          {categories.map(item => (
+            <Link
+              key={item._id.toString()}
+              href={`/posts?category=${item._id}`}
+              className={`block px-3 py-2 rounded-lg hover:bg-accent ${
+                category === item._id?.toString() ? "bg-accent" : ""
+              }`}
+            >
+              <div className="flex justify-between items-center">
+                <span>{item.title}</span>
+                <span className="text-sm text-muted-foreground">
+                  ({item.count})
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );
