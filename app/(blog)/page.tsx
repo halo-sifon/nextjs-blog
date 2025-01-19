@@ -9,7 +9,14 @@ import {
   XIcon,
 } from "@/components/icon";
 import { Input } from "@/components/ui";
-import { Search, Code, Package, MessageCircle } from "lucide-react";
+import {
+  Search,
+  Code,
+  Package,
+  MessageCircle,
+  QrCode,
+  FileText,
+} from "lucide-react";
 
 type ColorType = "blue" | "gray" | "pink" | "red" | "orange" | "purple";
 
@@ -58,6 +65,7 @@ const navLinks: {
     url: string;
     icon: React.ElementType;
     color: ColorType;
+    description?: string;
   }[];
 }[] = [
   {
@@ -65,9 +73,10 @@ const navLinks: {
     links: [
       {
         name: "Bing",
-        url: "https://www.bing.com",
+        url: "https://www.bing.com/?cc=hk",
         icon: BingIcon,
         color: "orange",
+        description: "使用香港的Bing搜索",
       },
       {
         name: "Google",
@@ -103,12 +112,61 @@ const navLinks: {
         url: "https://guru.kevin2li.top",
         icon: PDFIcon,
         color: "pink",
+        description: "pdf能做的，它都能做",
       },
       {
         name: "图片压缩",
         url: "https://tinify.cn/",
         icon: ImageCompressIcon,
         color: "purple",
+        description: "纯前端图片压缩",
+      },
+      {
+        name: "二维码生成",
+        url: "https://qrframe.kylezhe.ng/",
+        icon: QrCode,
+        color: "blue",
+        description: "提供多种二维码生成",
+      },
+      {
+        name: "文章解析",
+        url: "https://www.blog-keeper.com/",
+        icon: FileText,
+        color: "gray",
+        description: "可将地址解析为md文件",
+      },
+      {
+        name: "文件转Markdown",
+        url: "https://markitdown.pro/",
+        icon: FileText,
+        color: "orange",
+        description: "可将文件或者地址转换为Markdown",
+      },
+      {
+        name: "Md编辑器",
+        url: "https://resumd.t9t.io/",
+        icon: FileText,
+        color: "orange",
+        description: "可保存的Md编辑器",
+      },
+    ],
+  },
+  {
+    title: "AI相关",
+    links: [
+      {
+        name: "语音克隆",
+        url: "https://anyvoice.net/zh/ai-voice-cloning",
+        icon: PDFIcon,
+        color: "pink",
+        description: "克隆你的声音，并生成语音",
+      },
+      {
+        name: "Raphael（图像生成）",
+        url: "https://raphael.app/zh",
+        icon: PDFIcon,
+        color: "pink",
+        description: "AI图像生成，免费，不需要登录",
       },
     ],
   },
@@ -174,6 +232,7 @@ const navLinks: {
         url: "https://sonner.emilkowal.ski",
         icon: Code,
         color: "orange",
+        description: "一个轻量级的通知库",
       },
       {
         name: "JWT",
@@ -242,7 +301,7 @@ export default function Home() {
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group"
+                    className="group relative"
                   >
                     <div className="flex flex-col items-center justify-center p-3 rounded-xl border border-gray-100 hover:border-blue-500 transition-all duration-300 hover:shadow-md">
                       <div
@@ -251,6 +310,9 @@ export default function Home() {
                         <link.icon size={20} />
                       </div>
                       <span className="text-sm font-medium">{link.name}</span>
+                    </div>
+                    <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 bg-muted-foreground text-muted backdrop-blur-sm text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                      {link.description || link.name}
                     </div>
                   </a>
                 );

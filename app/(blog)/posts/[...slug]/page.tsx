@@ -68,6 +68,18 @@ export async function generateMetadata({
   };
 }
 
+export async function generateStaticParams() {
+  await connectDB();
+  const posts = await Post.find({}).populate({
+    path: "category",
+    model: Category,
+    select: "title slug",
+  });
+  return posts.map(post => ({
+    slug: [(post.category as ICategory).slug, post.title],
+  }));
+}
+
 export default async function PostPage(props: {
   params: Promise<{ slug: string[] }>;
 }) {
