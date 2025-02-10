@@ -186,7 +186,7 @@ export default function AdminPosts() {
                         <Button variant="outline" size="icon" asChild>
                           <Link
                             href={`/posts/${
-                              (post.category as ICategory).slug
+                              (post.category as ICategory)._id
                             }/${post.title}`}
                             target="_blank"
                           >
