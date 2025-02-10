@@ -142,7 +142,7 @@ export default function AdminPosts() {
                         </div>
                         {post.summary && (
                           <div
-                            className="text-sm text-muted-foreground truncate"
+                            className="text-sm text-muted-foreground truncate max-w-[380px]"
                             title={post.summary}
                           >
                             {post.summary}
