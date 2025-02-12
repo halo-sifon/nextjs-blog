@@ -6,8 +6,16 @@ import Link from "next/link";
 import { Button } from "@/components/ui";
 import { CategorySelect } from "./category-select";
 
-// 配置动态路由
-export const dynamic = "force-dynamic";
+// 配置动态路由，但允许自定义处理
+export const dynamic = "auto";
+
+// 配置 ISR 用于默认页面
+export const revalidate = 3600; // 每小时重新验证一次
+
+// 处理动态参数
+export async function generateStaticParams() {
+  return [{ searchParams: {} }]; // 只预渲染默认页面
+}
 
 // 获取所有分类及其文章数量
 async function getCategories() {
@@ -74,6 +82,12 @@ export default async function PostsPage({
   // 等待 searchParams
   const params = await searchParams;
   const category = params.category;
+
+  // 如果有分类参数，强制动态渲染
+  if (category) {
+    const headers = new Headers();
+    headers.set("x-middleware-cache", "no-cache");
+  }
 
   const [posts, categories] = await Promise.all([
     getPosts(category),
