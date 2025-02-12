@@ -6,21 +6,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui";
 import { CategorySelect } from "./category-select";
 
-// 配置 ISR
-export const revalidate = 3600; // 每小时重新验证一次
-
-// 生成静态路径参数
-export async function generateStaticParams() {
-  await connectDB();
-  const categories = await Category.find().select("_id");
-
-  return [
-    { searchParams: { category: undefined } }, // 默认路径
-    ...categories.map(cat => ({
-      searchParams: { category: cat._id.toString() },
-    })),
-  ];
-}
+// 配置动态路由
+export const dynamic = "force-dynamic";
 
 // 获取所有分类及其文章数量
 async function getCategories() {
@@ -133,6 +120,7 @@ export default async function PostsPage({
           <h2 className="text-lg font-semibold mb-4">分类</h2>
           <Link
             href="/posts"
+            prefetch={true}
             className={`block px-3 py-2 rounded-lg hover:bg-accent ${
               !category ? "bg-accent" : ""
             }`}
@@ -143,6 +131,7 @@ export default async function PostsPage({
             <Link
               key={item._id.toString()}
               href={`/posts?category=${item._id}`}
+              prefetch={true}
               className={`block px-3 py-2 rounded-lg hover:bg-accent ${
                 category === item._id?.toString() ? "bg-accent" : ""
               }`}
