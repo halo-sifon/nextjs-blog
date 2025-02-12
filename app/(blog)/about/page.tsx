@@ -1,4 +1,27 @@
+export const dynamic = "force-static";
+export const revalidate = false;
+
+import { Metadata } from "next";
 import Image from "next/image";
+
+export const metadata: Metadata = {
+  title: "关于我",
+  description:
+    "Sifon Chen - 一名充满热情的前端开发工程师，6年开发经验，专注于React、Next.js、TypeScript技术栈",
+  keywords: [
+    "前端开发",
+    "React",
+    "Next.js",
+    "TypeScript",
+    "Sifon Chen",
+    "个人博客",
+  ],
+  authors: [{ name: "Sifon Chen" }],
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
 export default function AboutPage() {
   return (
