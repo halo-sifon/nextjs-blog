@@ -6,8 +6,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui";
 import { CategorySelect } from "./category-select";
 
-// 添加重验证时间配置
-export const revalidate = 3600;
+// 配置 ISR
+export const revalidate = 3600; // 每小时重新验证一次
 
 // 生成静态路径参数
 export async function generateStaticParams() {
@@ -15,12 +15,13 @@ export async function generateStaticParams() {
   const categories = await Category.find().select("_id");
 
   return [
-    { category: undefined }, // 默认路径
+    { searchParams: { category: undefined } }, // 默认路径
     ...categories.map(cat => ({
-      category: cat._id.toString(),
+      searchParams: { category: cat._id.toString() },
     })),
   ];
 }
+
 // 获取所有分类及其文章数量
 async function getCategories() {
   try {

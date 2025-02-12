@@ -1,7 +1,6 @@
 import "highlight.js/styles/github.css";
 import MarkdownIt from "markdown-it";
 import highlightjs from "markdown-it-highlightjs";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import ScrollToTop from "@/components/scroll-to-top";
@@ -10,6 +9,7 @@ import { Post } from "@/models/Post";
 import { connectDB } from "@/lib/mongodb";
 import { Tag, Tags } from "lucide-react";
 import { Category, ICategory } from "@/models/Category";
+import BackButton from "./back-button";
 
 const md = new MarkdownIt({
   html: true,
@@ -96,25 +96,7 @@ export default async function PostPage(props: {
     <>
       <div className="max-w-5xl mx-auto p-4">
         <div className="mb-4">
-          <Link
-            href="/posts"
-            className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <svg
-              className="w-4 h-4 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-            返回
-          </Link>
+          <BackButton />
         </div>
 
         <article className="bg-card overflow-hidden">
