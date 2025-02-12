@@ -84,7 +84,9 @@ export default async function PostsPage({
 }: {
   searchParams: Promise<{ category?: string }>;
 }) {
-  const category = (await searchParams).category;
+  // 等待 searchParams
+  const params = await searchParams;
+  const category = params.category;
 
   const [posts, categories] = await Promise.all([
     getPosts(category),
