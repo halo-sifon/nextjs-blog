@@ -10,7 +10,7 @@ import { CategorySelect } from "./category-select";
 export const dynamic = "auto";
 
 // 配置 ISR 用于默认页面
-export const revalidate = 86400; // 每天重新验证一次
+export const revalidate = 3600; // 每小时重新验证一次
 
 // 处理动态参数
 export async function generateStaticParams() {
